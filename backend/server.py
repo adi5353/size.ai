@@ -116,7 +116,7 @@ def parse_from_mongo(item: dict) -> dict:
         if isinstance(value, str) and key in ['created_at', 'updated_at', 'timestamp']:
             try:
                 item[key] = datetime.fromisoformat(value)
-            except:
+            except ValueError:
                 pass
     return item
 
