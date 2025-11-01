@@ -33,13 +33,13 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
               inputMode="numeric"
               pattern="[0-9]*"
               defaultValue={devices[deviceType].quantity}
-              key={`qty-${deviceType}-${devices[deviceType].quantity}`}
-              onChange={(e) => {
+              onBlur={(e) => {
                 const value = e.target.value;
-                // Only allow digits
-                if (value === '' || /^\d+$/.test(value)) {
-                  const numValue = value === '' ? 0 : parseInt(value, 10);
+                const numValue = value === '' ? 0 : parseInt(value, 10);
+                if (!isNaN(numValue) && numValue >= 0) {
                   updateDevice(deviceType, 'quantity', numValue);
+                } else {
+                  e.target.value = devices[deviceType].quantity;
                 }
               }}
               placeholder="Quantity"
@@ -52,13 +52,13 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
               inputMode="numeric"
               pattern="[0-9]*"
               defaultValue={devices[deviceType].eps}
-              key={`eps-${deviceType}-${devices[deviceType].eps}`}
-              onChange={(e) => {
+              onBlur={(e) => {
                 const value = e.target.value;
-                // Only allow digits
-                if (value === '' || /^\d+$/.test(value)) {
-                  const numValue = value === '' ? 0 : parseInt(value, 10);
+                const numValue = value === '' ? 0 : parseInt(value, 10);
+                if (!isNaN(numValue) && numValue >= 0) {
                   updateDevice(deviceType, 'eps', numValue);
+                } else {
+                  e.target.value = devices[deviceType].eps;
                 }
               }}
               onFocus={(e) => e.target.select()}
