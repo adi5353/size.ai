@@ -4,10 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Monitor, Server, Network, Shield, Cloud, HelpCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 export const DeviceInventory = ({ devices, updateDevice }) => {
-  const [customEpsMode, setCustomEpsMode] = useState({});
 
   const DeviceInput = ({ deviceType, label, tooltip, defaultEps }) => {
     return (
