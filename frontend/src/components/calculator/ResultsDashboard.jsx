@@ -408,6 +408,152 @@ ${JSON.stringify(config, null, 2)}
         </div>
       </Card>
 
+      {/* Card 6: High Availability Recommendations */}
+      <Card className="glass-card p-6 shadow-glow">
+        <div className="mb-4">
+          <div className="flex items-center space-x-2 mb-2">
+            <Shield className="w-5 h-5 text-accent" />
+            <h3 className="text-lg font-heading font-bold text-foreground">High Availability Setup</h3>
+          </div>
+          <p className="text-xs text-muted-foreground">Based on {configuration.replicationFactor}x replication</p>
+        </div>
+        <div className="space-y-3">
+          {/* Replication Status */}
+          <div className={`p-4 rounded-lg border ${
+            configuration.replicationFactor >= 2 
+              ? 'bg-green-500/10 border-green-500/30' 
+              : 'bg-yellow-500/10 border-yellow-500/30'
+          }`}>
+            <div className="flex items-start space-x-2">
+              {configuration.replicationFactor >= 2 ? (
+                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+              ) : (
+                <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5" />
+              )}
+              <div className="flex-1">
+                <div className="text-sm font-semibold mb-1">
+                  {configuration.replicationFactor >= 2 ? 'HA Enabled' : 'No HA Configured'}
+                </div>
+                <p className="text-xs text-foreground">
+                  {configuration.replicationFactor >= 3
+                    ? `Excellent! ${configuration.replicationFactor}x replication provides strong data durability and fault tolerance. Can survive ${configuration.replicationFactor - 1} node failures.`
+                    : configuration.replicationFactor === 2
+                    ? '2x replication provides basic HA. Your data is protected against single node failure.'
+                    : 'Warning: No replication configured. Data loss risk if a node fails. Recommend 2x minimum for production.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* HA Recommendations */}
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-muted-foreground mb-2">Recommended HA Configuration:</div>
+            
+            {/* Management Layer */}
+            <div className="p-3 rounded-lg bg-secondary/30">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold">Management Layer</span>
+                {results.infrastructure.managementServer.instances >= 2 ? (
+                  <CheckCircle className="w-3 h-3 text-green-500" />
+                ) : (
+                  <Info className="w-3 h-3 text-yellow-500" />
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {results.infrastructure.managementServer.instances >= 2
+                  ? 'Active-passive cluster configured for redundancy'
+                  : results.totalDevices > 1000
+                  ? 'Recommend: Add standby management server for failover'
+                  : 'Single instance acceptable for this scale'}
+              </p>
+            </div>
+
+            {/* Data Layer */}
+            <div className="p-3 rounded-lg bg-secondary/30">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold">Data Layer</span>
+                {configuration.replicationFactor >= 2 ? (
+                  <CheckCircle className="w-3 h-3 text-green-500" />
+                ) : (
+                  <AlertTriangle className="w-3 h-3 text-yellow-500" />
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {configuration.replicationFactor >= 2
+                  ? `Data replicated across ${configuration.replicationFactor}x nodes. RPO: near-zero, RTO: < 5 minutes`
+                  : 'No replication configured. Data at risk. Enable 2x replication minimum.'}
+              </p>
+            </div>
+
+            {/* Search/Dashboard Layer */}
+            <div className="p-3 rounded-lg bg-secondary/30">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold">Search/Dashboard Layer</span>
+                {results.infrastructure.webConsole.instances >= 2 ? (
+                  <CheckCircle className="w-3 h-3 text-green-500" />
+                ) : (
+                  <Info className="w-3 h-3 text-yellow-500" />
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {results.infrastructure.webConsole.instances >= 2
+                  ? 'Load-balanced across multiple instances for high availability'
+                  : results.totalDevices > 5000
+                  ? 'Recommend: Add second console for load balancing'
+                  : 'Single console acceptable for this scale'}
+              </p>
+            </div>
+          </div>
+
+          {/* Network/Storage HA */}
+          <div className="p-4 rounded-lg bg-gradient-card border border-border/50">
+            <div className="text-xs font-semibold text-foreground mb-2">Additional HA Considerations:</div>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <div className="flex items-start space-x-2">
+                <span className="text-accent">•</span>
+                <span>Network: Deploy dual NICs with bonding for network redundancy</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-accent">•</span>
+                <span>Storage: Use RAID 10 for hot data, RAID 6 for cold data</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-accent">•</span>
+                <span>Backup: Implement automated snapshots every {configuration.retentionPeriod >= 365 ? '6' : '12'} hours</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-accent">•</span>
+                <span>Geographic: {results.totalDevices > 5000 ? 'Consider multi-datacenter deployment for DR' : 'Single datacenter acceptable'}</span>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-accent">•</span>
+                <span>Monitoring: Deploy health checks every 30 seconds with auto-failover</span>
+              </div>
+            </div>
+          </div>
+
+          {/* RTO/RPO */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <div className="text-xs text-muted-foreground mb-1">Recovery Time Objective</div>
+              <div className="text-lg font-bold text-primary">
+                {configuration.replicationFactor >= 3 ? '< 2 min' : 
+                 configuration.replicationFactor === 2 ? '< 5 min' : 
+                 '> 1 hour'}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Time to restore service</p>
+            </div>
+            <div className="p-3 rounded-lg bg-accent/10 border border-accent/30">
+              <div className="text-xs text-muted-foreground mb-1">Recovery Point Objective</div>
+              <div className="text-lg font-bold text-accent">
+                {configuration.replicationFactor >= 2 ? 'Near-zero' : 'Hours'}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Potential data loss</p>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* Warnings & Recommendations */}
       {results.warnings && results.warnings.all && results.warnings.all.length > 0 && (
         <Card className="glass-card p-6 shadow-glow">
