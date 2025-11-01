@@ -42,10 +42,20 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
           <Input
             type="number"
             min="0"
+            step="1"
             value={devices[deviceType].eps}
-            onChange={(e) => updateDevice(deviceType, 'eps', parseInt(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow empty string while typing
+              if (value === '') {
+                updateDevice(deviceType, 'eps', 0);
+              } else {
+                updateDevice(deviceType, 'eps', parseInt(value) || 0);
+              }
+            }}
+            onFocus={(e) => e.target.select()}
             placeholder="EPS"
-            className="bg-secondary/50 border-border/50 focus:border-primary transition-colors"
+            className="bg-secondary/50 border-border/50 focus:border-primary transition-colors pr-12"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
             EPS
