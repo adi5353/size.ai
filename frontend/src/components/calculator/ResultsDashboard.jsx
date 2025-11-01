@@ -229,6 +229,220 @@ ${JSON.stringify(config, null, 2)}
         </div>
       </Card>
 
+      {/* Card 3: Storage Requirements */}
+      <Card className="glass-card p-6 shadow-glow">
+        <div className="mb-4">
+          <div className="flex items-center space-x-2 mb-2">
+            <HardDrive className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-heading font-bold text-foreground">Storage Requirements</h3>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <div className="p-3 rounded-lg bg-secondary/30">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Total Storage</span>
+              <span className="text-lg font-bold text-primary">{results.totalStorageTB.toFixed(2)} TB</span>
+            </div>
+          </div>
+          {configuration.hotColdSplit && (
+            <>
+              <div className="p-3 rounded-lg bg-secondary/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Hot Storage</span>
+                  <span className="text-sm font-semibold text-accent">{results.hotStorageGB.toFixed(2)} TB</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-secondary/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Cold Storage</span>
+                  <span className="text-sm font-semibold text-muted-foreground">{results.coldStorageGB.toFixed(2)} TB</span>
+                </div>
+              </div>
+            </>
+          )}
+          <div className="p-3 rounded-lg bg-secondary/30">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Compression: {configuration.compressionLevel}</span>
+              <span className="text-sm font-semibold">
+                {configuration.compressionLevel === 'none' ? '0%' : 
+                 configuration.compressionLevel === 'standard' ? '40%' : '60%'}
+              </span>
+            </div>
+          </div>
+          <div className="p-3 rounded-lg bg-secondary/30">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Replication Factor</span>
+              <span className="text-sm font-semibold">{configuration.replicationFactor}x</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Card 4: Infrastructure Components */}
+      <Card className="glass-card p-6 shadow-glow">
+        <div className="mb-4">
+          <div className="flex items-center space-x-2 mb-2">
+            <Cpu className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-heading font-bold text-foreground">Infrastructure Components</h3>
+          </div>
+          <p className="text-xs text-muted-foreground">Hardware sizing for {results.architecture.type}</p>
+        </div>
+        <div className="space-y-4">
+          {/* Management Server */}
+          <div className="p-4 rounded-lg bg-gradient-card border border-border/50">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-foreground">Management Server</span>
+              <span className="text-xs text-accent">{results.infrastructure.managementServer.instances}x instances</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <span className="text-muted-foreground">CPU</span>
+                <p className="font-semibold">{results.infrastructure.managementServer.cpu} vCPU</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">RAM</span>
+                <p className="font-semibold">{results.infrastructure.managementServer.ram} GB</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Storage</span>
+                <p className="font-semibold">{results.infrastructure.managementServer.storage} GB</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">{results.infrastructure.managementServer.notes}</p>
+          </div>
+
+          {/* Data Indexer */}
+          <div className="p-4 rounded-lg bg-gradient-card border border-border/50">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-foreground">Data Indexer{results.infrastructure.dataIndexer.instances > 1 ? 's' : ''}</span>
+              <span className="text-xs text-accent">{results.infrastructure.dataIndexer.instances}x instances</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <span className="text-muted-foreground">CPU</span>
+                <p className="font-semibold">{results.infrastructure.dataIndexer.cpu} vCPU</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">RAM</span>
+                <p className="font-semibold">{results.infrastructure.dataIndexer.ram} GB</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Storage</span>
+                <p className="font-semibold">{results.infrastructure.dataIndexer.storage} GB</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">{results.infrastructure.dataIndexer.notes}</p>
+          </div>
+
+          {/* Web Console */}
+          <div className="p-4 rounded-lg bg-gradient-card border border-border/50">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-foreground">Web Console{results.infrastructure.webConsole.instances > 1 ? 's' : ''}</span>
+              <span className="text-xs text-accent">{results.infrastructure.webConsole.instances}x instances</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <span className="text-muted-foreground">CPU</span>
+                <p className="font-semibold">{results.infrastructure.webConsole.cpu} vCPU</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">RAM</span>
+                <p className="font-semibold">{results.infrastructure.webConsole.ram} GB</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Storage</span>
+                <p className="font-semibold">{results.infrastructure.webConsole.storage} GB</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">{results.infrastructure.webConsole.notes}</p>
+          </div>
+
+          {/* Total Resources */}
+          <div className="p-4 rounded-lg bg-primary/10 border border-primary/30">
+            <div className="text-sm font-semibold text-primary mb-2">Total Resources</div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <span className="text-muted-foreground">Total CPU</span>
+                <p className="font-bold text-primary">{results.infrastructure.totalCPU} vCPU</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Total RAM</span>
+                <p className="font-bold text-primary">{results.infrastructure.totalRAM} GB</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">System Storage</span>
+                <p className="font-bold text-primary">{results.infrastructure.totalStorage} GB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Card 5: Architecture Recommendation */}
+      <Card className="glass-card p-6 shadow-glow">
+        <div className="mb-4">
+          <div className="flex items-center space-x-2 mb-2">
+            <Activity className="w-5 h-5 text-accent" />
+            <h3 className="text-lg font-heading font-bold text-foreground">Architecture Recommendation</h3>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <div className="p-4 rounded-lg bg-gradient-card border border-accent/30">
+            <div className="text-xl font-heading font-bold text-accent mb-2">{results.architecture.type}</div>
+            <p className="text-sm text-foreground mb-3">{results.architecture.description}</p>
+            <div className="space-y-2 text-xs">
+              <div>
+                <span className="text-muted-foreground font-semibold">Deployment:</span>
+                <p className="text-foreground mt-1">{results.architecture.deployment}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground font-semibold">High Availability:</span>
+                <p className="text-foreground mt-1">{results.architecture.ha}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground font-semibold">Scaling:</span>
+                <p className="text-foreground mt-1">{results.architecture.scaling}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Warnings & Recommendations */}
+      {results.warnings && results.warnings.all && results.warnings.all.length > 0 && (
+        <Card className="glass-card p-6 shadow-glow">
+          <div className="mb-4">
+            <div className="flex items-center space-x-2 mb-2">
+              <AlertTriangle className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-heading font-bold text-foreground">Recommendations</h3>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {results.warnings.all.map((item, index) => (
+              <Alert key={index} className={
+                item.type === 'warning' ? 'border-yellow-500/50 bg-yellow-500/10' :
+                item.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
+                item.type === 'success' ? 'border-green-500/50 bg-green-500/10' :
+                item.type === 'compliance' ? 'border-blue-500/50 bg-blue-500/10' :
+                'border-border/50 bg-secondary/20'
+              }>
+                <div className="flex items-start space-x-2">
+                  {item.type === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5" />}
+                  {item.type === 'error' && <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5" />}
+                  {item.type === 'success' && <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />}
+                  {item.type === 'compliance' && <Shield className="w-4 h-4 text-blue-500 mt-0.5" />}
+                  {item.type === 'info' && <Info className="w-4 h-4 text-accent mt-0.5" />}
+                  <div className="flex-1">
+                    <AlertTitle className="text-sm font-semibold">{item.title}</AlertTitle>
+                    <AlertDescription className="text-xs mt-1">{item.message}</AlertDescription>
+                  </div>
+                </div>
+              </Alert>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Action Buttons */}
       <div className="space-y-3">
         <Button 
