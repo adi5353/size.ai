@@ -1,19 +1,14 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
 
 /**
  * Generate a comprehensive PDF report for SIEM/XDR sizing
  */
 export const generatePDFReport = (results, devices, configuration) => {
-  const doc = new jsPDF();
-  
-  // Extend jsPDF with autoTable
-  if (typeof doc.autoTable !== 'function') {
-    doc.autoTable = autoTable;
-  }
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  let yPos = 20;
+  try {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPos = 20;
 
   // Helper function to add a new page if needed
   const checkPageBreak = (requiredSpace = 30) => {
