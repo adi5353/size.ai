@@ -23,7 +23,7 @@ import { Loader2, Trash2 } from 'lucide-react';
 
 export const Calculator = () => {
   const { isAuthenticated, token } = useAuth();
-  const API_URL = import.meta.env.VITE_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || 'https://sizeai-calc.preview.emergentagent.com';
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [devices, setDevices] = useState({
     // Endpoints
