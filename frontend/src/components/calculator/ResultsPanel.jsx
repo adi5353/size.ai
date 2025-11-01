@@ -23,21 +23,84 @@ export const ResultsPanel = ({ results, devices, configuration }) => {
         description: 'Your sizing report has been downloaded successfully.',
       });
     } catch (error) {
+      console.error('PDF generation error:', error);
       toast.error('Failed to generate PDF', {
-        description: 'Please try again or check your inputs.',
+        description: error.message || 'Please try again or check your inputs.',
       });
     }
   };
 
   const handleSaveConfig = () => {
     try {
-      const config = { devices, configuration, timestamp: new Date().toISOString() };
-      localStorage.setItem('sizeai_config', JSON.stringify(config));
-      toast.success('Configuration Saved!', {
-        description: 'Your settings have been saved to browser storage.',
+      const config = {
+        devices,
+        configuration,
+        results,
+        timestamp: new Date().toISOString(),
+        generatedBy: 'size.ai'
+      };
+      
+      // Create a nicely formatted text file
+      const configText = `size.ai - SIEM/XDR Configuration Export
+========================================
+Generated: ${new Date().toLocaleString()}
+
+## DEVICE INVENTORY
+${Object.entries(devices)
+  .filter(([_, device]) => device.quantity > 0)
+  .map(([type, device]) => `${type}: ${device.quantity} devices @ ${device.eps} EPS each`)
+  .join('\n')}
+
+## CONFIGURATION
+Retention Period: ${configuration.retentionPeriod} days
+Hot Storage: ${configuration.hotStorage} days
+Cold Storage: ${configuration.retentionPeriod - configuration.hotStorage} days
+Growth Factor: ${configuration.growthFactor}%
+Peak Factor: ${configuration.peakFactor}x
+Compression Ratio: ${configuration.compressionRatio}:1
+
+## CALCULATED RESULTS
+Average EPS: ${results.averageEPS.toLocaleString()}
+Peak EPS: ${results.peakEPS.toLocaleString()}
+Daily Volume: ${results.dailyGB.toFixed(2)} GB
+Monthly Volume: ${results.monthlyTB.toFixed(2)} TB
+Yearly Volume: ${results.yearlyTB.toFixed(2)} TB
+
+Hot Storage Required: ${results.hotStorageTB.toFixed(2)} TB
+Cold Storage Required: ${results.coldStorageTB.toFixed(2)} TB
+Total Raw Storage: ${results.totalStorageTB.toFixed(2)} TB
+Compressed Storage: ${results.compressedStorageTB.toFixed(2)} TB
+
+Indexer Nodes: ${results.infrastructure.indexers}
+Search Heads: ${results.infrastructure.searchHeads}
+Total CPU Cores: ${results.infrastructure.cpuCores}
+Total RAM: ${results.infrastructure.ramGB} GB
+Network Bandwidth: ${results.infrastructure.networkGbps} Gbps
+
+## JSON DATA (for import)
+${JSON.stringify(config, null, 2)}
+`;
+
+      // Create blob and download
+      const blob = new Blob([configText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const timestamp = new Date().toISOString().split('T')[0];
+      link.download = `sizeai-config-${timestamp}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast.success('Configuration Downloaded!', {
+        description: 'Your settings have been saved to a text file.',
       });
     } catch (error) {
-      toast.error('Failed to save configuration');
+      console.error('Save error:', error);
+      toast.error('Failed to save configuration', {
+        description: 'Please try again.',
+      });
     }
   };
 
@@ -221,7 +284,7 @@ export const ResultsPanel = ({ results, devices, configuration }) => {
           size="lg"
         >
           <Save className="w-4 h-4 mr-2" />
-          Save Configuration
+          Download Configuration
         </Button>
       </div>
     </Card>

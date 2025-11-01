@@ -5,8 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Monitor, Server, Network, Shield, Cloud } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 export const DeviceInventory = ({ devices, updateDevice }) => {
+  const [customEpsMode, setCustomEpsMode] = useState({});
+
   const renderDeviceInput = (deviceType, label, icon, epsOptions = null) => (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -27,10 +30,16 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
           />
         </div>
         <div>
-          {epsOptions ? (
+          {epsOptions && !customEpsMode[deviceType] ? (
             <Select 
               value={devices[deviceType].eps.toString()} 
-              onValueChange={(value) => updateDevice(deviceType, 'eps', parseInt(value))}
+              onValueChange={(value) => {
+                if (value === 'custom') {
+                  setCustomEpsMode({...customEpsMode, [deviceType]: true});
+                } else {
+                  updateDevice(deviceType, 'eps', parseInt(value));
+                }
+              }}
             >
               <SelectTrigger className="bg-secondary/50 border-border/50">
                 <SelectValue />
@@ -39,18 +48,28 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
                 {epsOptions.map(eps => (
                   <SelectItem key={eps} value={eps.toString()}>{eps} EPS</SelectItem>
                 ))}
-                <SelectItem value="custom">Custom</SelectItem>
+                <SelectItem value="custom">Custom EPS</SelectItem>
               </SelectContent>
             </Select>
           ) : (
-            <Input
-              type="number"
-              min="0"
-              value={devices[deviceType].eps}
-              onChange={(e) => updateDevice(deviceType, 'eps', parseInt(e.target.value) || 0)}
-              placeholder="EPS"
-              className="bg-secondary/50 border-border/50 focus:border-primary transition-colors"
-            />
+            <div className="relative">
+              <Input
+                type="number"
+                min="0"
+                value={devices[deviceType].eps}
+                onChange={(e) => updateDevice(deviceType, 'eps', parseInt(e.target.value) || 0)}
+                placeholder="Custom EPS"
+                className="bg-secondary/50 border-border/50 focus:border-primary transition-colors"
+              />
+              {epsOptions && customEpsMode[deviceType] && (
+                <button
+                  onClick={() => setCustomEpsMode({...customEpsMode, [deviceType]: false})}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-accent hover:text-accent/80"
+                >
+                  Presets
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
