@@ -158,15 +158,23 @@ export const generatePDFReport = (results, devices, configuration) => {
 
   yPos += 10;
 
+  const compressionPct = configuration.compressionLevel === 'none' ? '0%' : 
+                        configuration.compressionLevel === 'standard' ? '40%' : '60%';
+  
   const storageRows = [
-    ['Hot Storage (SSD/NVMe)', `${configuration.hotStorage} days`, `${results.hotStorageTB.toFixed(2)} TB`],
-    ['Cold Storage (Archive)', `${configuration.retentionPeriod - configuration.hotStorage} days`, `${results.coldStorageTB.toFixed(2)} TB`],
-    ['Total Raw Storage', `${configuration.retentionPeriod} days`, `${results.totalStorageTB.toFixed(2)} TB`],
-    ['Compression Ratio', `${configuration.compressionRatio}:1`, '-'],
-    ['Compressed Storage', '-', `${results.compressedStorageTB.toFixed(2)} TB`]
+    ['Raw Storage', `${configuration.retentionPeriod} days`, `${(results.rawStorageGB / 1000).toFixed(2)} TB`],
+    ['After Compression', compressionPct, `${(results.compressedStorageGB / 1000).toFixed(2)} TB`],
+    ['Replication Factor', `${configuration.replicationFactor}x`, '-'],
+    ['After Replication', '-', `${(results.replicatedStorageGB / 1000).toFixed(2)} TB`],
+    ['Final (with indexing)', '+20% overhead', `${results.totalStorageTB.toFixed(2)} TB`]
   ];
 
-  yPos = drawTable(['Storage Type', 'Duration', 'Capacity'], storageRows, yPos);
+  if (configuration.hotColdSplit) {
+    storageRows.push(['Hot Storage', `${configuration.hotStorageDays} days`, `${results.hotStorageGB.toFixed(2)} TB`]);
+    storageRows.push(['Cold Storage', `${configuration.retentionPeriod - configuration.hotStorageDays} days`, `${results.coldStorageGB.toFixed(2)} TB`]);
+  }
+
+  yPos = drawTable(['Storage Type', 'Configuration', 'Capacity'], storageRows, yPos);
 
   // Infrastructure Recommendations
   yPos += 10;
