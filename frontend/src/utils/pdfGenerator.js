@@ -187,15 +187,13 @@ export const generatePDFReport = (results, devices, configuration) => {
   yPos += 10;
 
   const infraRows = [
-    ['Indexer/Data Nodes', results.infrastructure.indexers.toString(), 'For data ingestion'],
-    ['Search Head Nodes', results.infrastructure.searchHeads.toString(), 'For query distribution'],
-    ['Forwarder Nodes', results.infrastructure.forwarders.toString(), 'For log collection'],
-    ['Total CPU Cores', results.infrastructure.cpuCores.toString(), 'Distributed across cluster'],
-    ['Total RAM', `${results.infrastructure.ramGB} GB`, 'For optimal performance'],
-    ['Network Bandwidth', `${results.infrastructure.networkGbps} Gbps`, 'Required throughput']
+    ['Management Server', `${results.infrastructure.managementServer.instances}x`, `${results.infrastructure.managementServer.cpu}vCPU, ${results.infrastructure.managementServer.ram}GB RAM`, results.infrastructure.managementServer.notes],
+    ['Data Indexers', `${results.infrastructure.dataIndexer.instances}x`, `${results.infrastructure.dataIndexer.cpu}vCPU, ${results.infrastructure.dataIndexer.ram}GB RAM`, results.infrastructure.dataIndexer.notes],
+    ['Web Console', `${results.infrastructure.webConsole.instances}x`, `${results.infrastructure.webConsole.cpu}vCPU, ${results.infrastructure.webConsole.ram}GB RAM`, results.infrastructure.webConsole.notes],
+    ['Total Resources', '-', `${results.infrastructure.totalCPU}vCPU, ${results.infrastructure.totalRAM}GB RAM`, `${results.infrastructure.totalStorage}GB storage`]
   ];
 
-  yPos = drawTable(['Component', 'Requirement', 'Notes'], infraRows, yPos);
+  yPos = drawTable(['Component', 'Instances', 'Specs', 'Notes'], infraRows, yPos);
 
   // Configuration Parameters
   yPos += 10;
