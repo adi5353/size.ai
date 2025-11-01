@@ -10,67 +10,6 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
   const [customEpsMode, setCustomEpsMode] = useState({});
 
   const DeviceInput = ({ deviceType, label, tooltip, defaultEps }) => {
-    // Local state for input values to allow smooth typing
-    const [localQuantity, setLocalQuantity] = useState(devices[deviceType].quantity);
-    const [localEps, setLocalEps] = useState(devices[deviceType].eps);
-
-    // Sync with parent state when device changes externally
-    useEffect(() => {
-      setLocalQuantity(devices[deviceType].quantity);
-    }, [devices[deviceType].quantity]);
-
-    useEffect(() => {
-      setLocalEps(devices[deviceType].eps);
-    }, [devices[deviceType].eps]);
-
-    const handleQuantityChange = (e) => {
-      const value = e.target.value;
-      setLocalQuantity(value); // Keep as string while typing
-      
-      // Update parent state with parsed value
-      if (value === '') {
-        updateDevice(deviceType, 'quantity', 0);
-      } else {
-        const numValue = parseInt(value, 10);
-        if (!isNaN(numValue) && numValue >= 0) {
-          updateDevice(deviceType, 'quantity', numValue);
-        }
-      }
-    };
-
-    const handleEpsChange = (e) => {
-      const value = e.target.value;
-      setLocalEps(value); // Keep as string while typing
-      
-      // Update parent state with parsed value
-      if (value === '') {
-        updateDevice(deviceType, 'eps', 0);
-      } else {
-        const numValue = parseInt(value, 10);
-        if (!isNaN(numValue) && numValue >= 0) {
-          updateDevice(deviceType, 'eps', numValue);
-        }
-      }
-    };
-
-    const handleQuantityBlur = () => {
-      // Ensure we have a valid number on blur
-      const numValue = parseInt(localQuantity, 10);
-      if (isNaN(numValue) || numValue < 0) {
-        setLocalQuantity(0);
-        updateDevice(deviceType, 'quantity', 0);
-      }
-    };
-
-    const handleEpsBlur = () => {
-      // Ensure we have a valid number on blur
-      const numValue = parseInt(localEps, 10);
-      if (isNaN(numValue) || numValue < 0) {
-        setLocalEps(0);
-        updateDevice(deviceType, 'eps', 0);
-      }
-    };
-
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
@@ -92,23 +31,36 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Input
-              type="number"
-              min="0"
-              value={localQuantity}
-              onChange={handleQuantityChange}
-              onBlur={handleQuantityBlur}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={devices[deviceType].quantity}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Only allow digits
+                if (value === '' || /^\d+$/.test(value)) {
+                  const numValue = value === '' ? 0 : parseInt(value, 10);
+                  updateDevice(deviceType, 'quantity', numValue);
+                }
+              }}
               placeholder="Quantity"
               className="bg-secondary/50 border-border/50 focus:border-primary transition-colors"
             />
           </div>
           <div className="relative">
             <Input
-              type="number"
-              min="0"
-              step="1"
-              value={localEps}
-              onChange={handleEpsChange}
-              onBlur={handleEpsBlur}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={devices[deviceType].eps}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Only allow digits
+                if (value === '' || /^\d+$/.test(value)) {
+                  const numValue = value === '' ? 0 : parseInt(value, 10);
+                  updateDevice(deviceType, 'eps', numValue);
+                }
+              }}
               onFocus={(e) => e.target.select()}
               placeholder="EPS"
               className="bg-secondary/50 border-border/50 focus:border-primary transition-colors pr-12"
