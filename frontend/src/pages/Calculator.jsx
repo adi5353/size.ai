@@ -142,6 +142,7 @@ export const Calculator = () => {
               updateConfiguration={updateConfiguration}
               applyComplianceTemplate={applyComplianceTemplate}
             />
+            <AIAssistant devices={devices} configuration={configuration} results={results} />
           </motion.div>
 
           {/* Right Column - Quick Summary */}
