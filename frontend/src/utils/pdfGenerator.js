@@ -140,7 +140,13 @@ export const generatePDFReport = (results, devices, configuration) => {
     }
   });
 
-  yPos = drawTable(['Device Type', 'Quantity', 'EPS/Device', 'Total EPS'], deviceRows, yPos);
+  if (deviceRows.length > 0) {
+    yPos = drawTable(['Device Type', 'Quantity', 'EPS/Device', 'Total EPS'], deviceRows, yPos);
+  } else {
+    doc.setFontSize(10);
+    doc.text('No devices configured', 25, yPos);
+    yPos += 10;
+  }
 
   // Storage Analysis
   yPos += 10;
