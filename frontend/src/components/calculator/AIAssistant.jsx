@@ -27,7 +27,12 @@ export const AIAssistant = ({ devices, configuration, results }) => {
 
   const generateSmartResponse = (userQuery) => {
     const q = userQuery.toLowerCase();
-    const totalDevices = Object.values(devices).reduce((sum, d) => sum + d.quantity, 0);
+    const totalDevices = results.totalDevices || Object.values(devices).reduce((sum, d) => sum + d.quantity, 0);
+    
+    // Safety check - if no results, return early message
+    if (!results || !results.totalEPS || results.totalEPS === 0) {
+      return "Please add some devices to your inventory first, and I'll be able to provide detailed recommendations based on your specific infrastructure sizing.";
+    }
     
     // Generate a unique conversation starter based on the query
     const conversationStarters = [
@@ -42,7 +47,7 @@ export const AIAssistant = ({ devices, configuration, results }) => {
     // Analyze query to determine response type
     if (q.includes('splunk') && q.includes('elastic')) {
       const insights = [
-        `At your scale of ${results.averageEPS.toLocaleString()} EPS, both platforms are viable but with different trade-offs.`,
+        `At your scale of ${results.totalEPS.toLocaleString()} EPS, both platforms are viable but with different trade-offs.`,
         `For your volume (${results.dailyGB.toFixed(2)} GB/day), the cost difference is significant.`,
         `With ${totalDevices} devices, consider your team's expertise level.`
       ];
