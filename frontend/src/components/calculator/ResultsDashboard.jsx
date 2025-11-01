@@ -554,6 +554,155 @@ ${JSON.stringify(config, null, 2)}
         </div>
       </Card>
 
+      {/* Card 6: Growth Projections */}
+      {configuration.includeGrowth && results.growthProjections && results.growthProjections.length > 0 && (
+        <Card className="glass-card p-6 shadow-glow">
+          <div className="mb-4">
+            <div className="flex items-center space-x-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-heading font-bold text-foreground">Growth Projections</h3>
+            </div>
+            <p className="text-xs text-muted-foreground">Projected growth at {configuration.annualGrowth}% annually</p>
+          </div>
+          <div className="space-y-3">
+            {results.growthProjections.map((projection, index) => (
+              <div key={index} className="p-4 rounded-lg bg-gradient-card border border-border/50">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-bold text-accent">Year {projection.year}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date().getFullYear() + projection.year}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-2 rounded bg-secondary/30">
+                    <div className="text-xs text-muted-foreground mb-1">Devices</div>
+                    <div className="text-base font-bold text-foreground">
+                      {projection.devices.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-accent mt-0.5">
+                      +{((projection.devices / results.totalDevices - 1) * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-secondary/30">
+                    <div className="text-xs text-muted-foreground mb-1">EPS</div>
+                    <div className="text-base font-bold text-foreground">
+                      {projection.eps.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-accent mt-0.5">
+                      +{((projection.eps / results.totalEPS - 1) * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-secondary/30">
+                    <div className="text-xs text-muted-foreground mb-1">Daily Volume</div>
+                    <div className="text-base font-bold text-foreground">
+                      {projection.dailyGB.toFixed(1)} GB
+                    </div>
+                    <div className="text-xs text-accent mt-0.5">
+                      +{((projection.dailyGB / results.dailyGB - 1) * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-secondary/30">
+                    <div className="text-xs text-muted-foreground mb-1">Storage Needed</div>
+                    <div className="text-base font-bold text-primary">
+                      {projection.storageTB.toFixed(2)} TB
+                    </div>
+                    <div className="text-xs text-accent mt-0.5">
+                      +{((projection.storageTB / results.totalStorageTB - 1) * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Card 7: Cost Estimation */}
+      {results.costs && (
+        <Card className="glass-card p-6 shadow-glow">
+          <div className="mb-4">
+            <div className="flex items-center space-x-2 mb-2">
+              <Database className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-heading font-bold text-foreground">Cost Estimation</h3>
+            </div>
+            <p className="text-xs text-muted-foreground">Estimated infrastructure costs (USD)</p>
+          </div>
+          <div className="space-y-4">
+            {/* Monthly Breakdown */}
+            <div>
+              <div className="text-sm font-semibold text-muted-foreground mb-3">Monthly Cost Breakdown</div>
+              <div className="space-y-2">
+                <div className="p-3 rounded-lg bg-secondary/30">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <Cpu className="w-4 h-4 text-primary" />
+                      <span className="text-sm text-foreground">Hardware/Compute</span>
+                    </div>
+                    <span className="text-sm font-semibold text-foreground">
+                      ${results.costs.hardwareMonthly.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3 rounded-lg bg-secondary/30">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <HardDrive className="w-4 h-4 text-accent" />
+                      <span className="text-sm text-foreground">Storage</span>
+                    </div>
+                    <span className="text-sm font-semibold text-foreground">
+                      ${results.costs.storageMonthly.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3 rounded-lg bg-secondary/30">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <Activity className="w-4 h-4 text-foreground" />
+                      <span className="text-sm text-foreground">Network/Bandwidth</span>
+                    </div>
+                    <span className="text-sm font-semibold text-foreground">
+                      ${results.costs.networkMonthly.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Total Costs */}
+            <div className="space-y-3">
+              <div className="p-4 rounded-lg bg-gradient-primary/10 border border-primary/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-semibold text-foreground">Total Monthly</span>
+                  <span className="text-xl font-bold text-primary">
+                    ${results.costs.totalMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 rounded-lg bg-accent/10 border border-accent/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-semibold text-foreground">Total Annual</span>
+                  <span className="text-xl font-bold text-accent">
+                    ${results.costs.totalAnnual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Cost Notes */}
+            <div className="p-3 rounded-lg bg-secondary/20 border border-border/30">
+              <div className="flex items-start space-x-2">
+                <Info className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                  Estimates based on cloud infrastructure pricing. Actual costs may vary based on provider, region, reserved instances, and enterprise discounts. Does not include licensing, support, or personnel costs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* Warnings & Recommendations */}
       {results.warnings && results.warnings.all && results.warnings.all.length > 0 && (
         <Card className="glass-card p-6 shadow-glow">
