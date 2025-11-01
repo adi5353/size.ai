@@ -33,7 +33,18 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
             type="number"
             min="0"
             value={devices[deviceType].quantity}
-            onChange={(e) => updateDevice(deviceType, 'quantity', parseInt(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow empty string for better UX while typing
+              if (value === '') {
+                updateDevice(deviceType, 'quantity', 0);
+              } else {
+                const numValue = parseInt(value, 10);
+                if (!isNaN(numValue) && numValue >= 0) {
+                  updateDevice(deviceType, 'quantity', numValue);
+                }
+              }
+            }}
             placeholder="Quantity"
             className="bg-secondary/50 border-border/50 focus:border-primary transition-colors"
           />
@@ -46,11 +57,14 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
             value={devices[deviceType].eps}
             onChange={(e) => {
               const value = e.target.value;
-              // Allow empty string while typing
+              // Allow empty string for better UX while typing
               if (value === '') {
                 updateDevice(deviceType, 'eps', 0);
               } else {
-                updateDevice(deviceType, 'eps', parseInt(value) || 0);
+                const numValue = parseInt(value, 10);
+                if (!isNaN(numValue) && numValue >= 0) {
+                  updateDevice(deviceType, 'eps', numValue);
+                }
               }
             }}
             onFocus={(e) => e.target.select()}
