@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || 'https://sizeai-calc.preview.emergentagent.com';
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Load token from localStorage on mount
   useEffect(() => {
