@@ -207,12 +207,19 @@ export const generatePDFReport = (results, devices, configuration) => {
 
   const configLines = [
     `Retention Period: ${configuration.retentionPeriod} days`,
-    `Hot Storage Duration: ${configuration.hotStorage} days`,
-    `Cold Storage Duration: ${configuration.retentionPeriod - configuration.hotStorage} days`,
-    `Annual Growth Factor: ${configuration.growthFactor}%`,
-    `Peak Load Multiplier: ${configuration.peakFactor}x`,
-    `Compression Ratio: ${configuration.compressionRatio}:1`
+    `Replication Factor: ${configuration.replicationFactor}x`,
+    `Compression Level: ${configuration.compressionLevel}`,
+    `Compliance Template: ${configuration.complianceTemplate || 'custom'}`,
   ];
+
+  if (configuration.hotColdSplit) {
+    configLines.push(`Hot Storage: ${configuration.hotStorageDays} days`);
+    configLines.push(`Cold Storage: ${configuration.retentionPeriod - configuration.hotStorageDays} days`);
+  }
+
+  if (configuration.includeGrowth) {
+    configLines.push(`Annual Growth Rate: ${configuration.annualGrowth}%`);
+  }
 
   doc.setFontSize(11);
   doc.setTextColor(60, 60, 60);
