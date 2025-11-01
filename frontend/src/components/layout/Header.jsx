@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Activity, LogIn, LogOut, User, Save } from 'lucide-react';
+import { Activity, LogIn, LogOut, User, Save, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,11 @@ import { AuthModal } from '@/components/auth/AuthModal';
 export const Header = ({ onSaveConfig, onLoadConfigs }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isCalculatorPage = location.pathname === '/calculator';
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
@@ -24,10 +30,11 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.div 
-              className="flex items-center space-x-3"
+              className="flex items-center space-x-3 cursor-pointer"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
+              onClick={() => navigate('/')}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
@@ -50,15 +57,31 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
             >
               {isAuthenticated ? (
                 <>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={onSaveConfig}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save to Account
-                  </Button>
+                  {/* Show "Go to Calculator" on home page */}
+                  {isHomePage && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => navigate('/calculator')}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Activity className="w-4 h-4 mr-2" />
+                      Go to Calculator
+                    </Button>
+                  )}
+
+                  {/* Show "Save to Account" only on calculator page */}
+                  {isCalculatorPage && onSaveConfig && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={onSaveConfig}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save to Account
+                    </Button>
+                  )}
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -77,11 +100,24 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={onLoadConfigs}>
-                        <Save className="mr-2 h-4 w-4" />
-                        <span>My Configurations</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
+                      {isCalculatorPage && onLoadConfigs && (
+                        <>
+                          <DropdownMenuItem onClick={onLoadConfigs}>
+                            <Save className="mr-2 h-4 w-4" />
+                            <span>My Configurations</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
+                      {isCalculatorPage && (
+                        <>
+                          <DropdownMenuItem onClick={() => navigate('/')}>
+                            <Home className="mr-2 h-4 w-4" />
+                            <span>Home</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
                       <DropdownMenuItem onClick={logout}>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Logout</span>
