@@ -95,15 +95,15 @@ export const generatePDFReport = (results, devices, configuration) => {
   doc.setTextColor(60, 60, 60);
   doc.setFont('helvetica', 'normal');
 
-  const totalDevices = Object.values(devices).reduce((sum, d) => sum + d.quantity, 0);
+  const totalDevices = results.totalDevices || Object.values(devices).reduce((sum, d) => sum + d.quantity, 0);
   
   const summaryLines = [
     `Total Devices Monitored: ${totalDevices.toLocaleString()}`,
-    `Average EPS: ${results.averageEPS.toLocaleString()}`,
-    `Peak EPS: ${results.peakEPS.toLocaleString()}`,
-    `Daily Log Volume: ${results.dailyGB.toFixed(2)} GB`,
-    `Total Storage Required: ${results.totalStorageTB.toFixed(2)} TB (raw)`,
-    `Compressed Storage: ${results.compressedStorageTB.toFixed(2)} TB`,
+    `Average EPS: ${results.totalEPS ? results.totalEPS.toLocaleString() : '0'}`,
+    `Peak EPS: ${results.peakEPS ? Math.round(results.peakEPS).toLocaleString() : '0'}`,
+    `Daily Log Volume: ${results.dailyGB ? results.dailyGB.toFixed(2) : '0'} GB`,
+    `Total Storage Required: ${results.totalStorageTB ? results.totalStorageTB.toFixed(2) : '0'} TB`,
+    `Compressed Storage: ${results.compressedStorageGB ? (results.compressedStorageGB / 1000).toFixed(2) : '0'} TB`,
     `Retention Period: ${configuration.retentionPeriod} days`
   ];
 
