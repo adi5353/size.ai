@@ -3,6 +3,7 @@ import Header from '@/components/layout/Header';
 import DeviceInventory from '@/components/calculator/DeviceInventory';
 import ConfigurationPanel from '@/components/calculator/ConfigurationPanel';
 import ResultsDashboard from '@/components/calculator/ResultsDashboard';
+import AIAssistant from '@/components/calculator/AIAssistant';
 import { calculateInfrastructure } from '@/utils/calculations';
 import { motion } from 'framer-motion';
 
