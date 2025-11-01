@@ -6,8 +6,25 @@ import ResultsDashboard from '@/components/calculator/ResultsDashboard';
 import AIAssistant from '@/components/calculator/AIAssistant';
 import { calculateInfrastructure } from '@/utils/calculations';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Loader2, Trash2 } from 'lucide-react';
 
 export const Calculator = () => {
+  const { isAuthenticated, token } = useAuth();
+  const API_URL = import.meta.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
+
   const [devices, setDevices] = useState({
     // Endpoints
     windowsWorkstations: { quantity: 0, eps: 3 },
@@ -41,10 +58,18 @@ export const Calculator = () => {
     includeGrowth: false,
     annualGrowth: 20,
     replicationFactor: 2,
-    compressionLevel: 'standard', // none, standard (40%), high (60%)
+    compressionLevel: 'standard',
     hotColdSplit: false,
     hotStorageDays: 30,
   });
+
+  // Save/Load configuration state
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [loadDialogOpen, setLoadDialogOpen] = useState(false);
+  const [configName, setConfigName] = useState('');
+  const [configDescription, setConfigDescription] = useState('');
+  const [savedConfigs, setSavedConfigs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Memoize results to prevent recalculation on every render
   const results = useMemo(() => {
@@ -95,9 +120,116 @@ export const Calculator = () => {
     }
   };
 
+  // Save configuration to account
+  const handleSaveConfig = () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to save configurations');
+      return;
+    }
+    setSaveDialogOpen(true);
+  };
+
+  const saveConfiguration = async () => {
+    if (!configName.trim()) {
+      toast.error('Please enter a configuration name');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/configurations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: configName,
+          description: configDescription,
+          devices,
+          configuration,
+          results
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save configuration');
+      }
+
+      toast.success('Configuration saved successfully!');
+      setSaveDialogOpen(false);
+      setConfigName('');
+      setConfigDescription('');
+    } catch (error) {
+      toast.error(error.message || 'Failed to save configuration');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load configurations
+  const handleLoadConfigs = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to load configurations');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/configurations`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load configurations');
+      }
+
+      const configs = await response.json();
+      setSavedConfigs(configs);
+      setLoadDialogOpen(true);
+    } catch (error) {
+      toast.error(error.message || 'Failed to load configurations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadConfiguration = (config) => {
+    setDevices(config.devices);
+    setConfiguration(config.configuration);
+    setLoadDialogOpen(false);
+    toast.success(`Loaded configuration: ${config.name}`);
+  };
+
+  const deleteConfiguration = async (configId) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/configurations/${configId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete configuration');
+      }
+
+      toast.success('Configuration deleted');
+      // Refresh the list
+      setSavedConfigs(prev => prev.filter(c => c.id !== configId));
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete configuration');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background grid-bg">
-      <Header />
+      <Header onSaveConfig={handleSaveConfig} onLoadConfigs={handleLoadConfigs} />
       
       {/* Animated background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
