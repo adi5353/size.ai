@@ -32,7 +32,8 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              value={devices[deviceType].quantity}
+              defaultValue={devices[deviceType].quantity}
+              key={`qty-${deviceType}-${devices[deviceType].quantity}`}
               onChange={(e) => {
                 const value = e.target.value;
                 // Only allow digits
@@ -50,7 +51,8 @@ export const DeviceInventory = ({ devices, updateDevice }) => {
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              value={devices[deviceType].eps}
+              defaultValue={devices[deviceType].eps}
+              key={`eps-${deviceType}-${devices[deviceType].eps}`}
               onChange={(e) => {
                 const value = e.target.value;
                 // Only allow digits
