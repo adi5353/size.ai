@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Header from '@/components/layout/Header';
 import DeviceInventory from '@/components/calculator/DeviceInventory';
 import ConfigurationPanel from '@/components/calculator/ConfigurationPanel';
@@ -46,7 +46,10 @@ export const Calculator = () => {
     hotStorageDays: 30,
   });
 
-  const results = calculateInfrastructure(devices, configuration);
+  // Memoize results to prevent recalculation on every render
+  const results = useMemo(() => {
+    return calculateInfrastructure(devices, configuration);
+  }, [devices, configuration]);
 
   const updateDevice = (deviceType, field, value) => {
     setDevices(prev => ({
