@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
+import HomePage from '@/pages/HomePage';
 import Calculator from '@/pages/Calculator';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import '@/App.css';
 
 function App() {
@@ -11,7 +13,15 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Calculator />} />
+            <Route path="/" element={<HomePage />} />
+            <Route 
+              path="/calculator" 
+              element={
+                <ProtectedRoute>
+                  <Calculator />
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </BrowserRouter>
         <Toaster />
