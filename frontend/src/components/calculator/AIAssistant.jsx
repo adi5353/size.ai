@@ -29,6 +29,16 @@ export const AIAssistant = ({ devices, configuration, results }) => {
     const q = userQuery.toLowerCase();
     const totalDevices = Object.values(devices).reduce((sum, d) => sum + d.quantity, 0);
     
+    // Generate a unique conversation starter based on the query
+    const conversationStarters = [
+      "Let me analyze your infrastructure and provide some insights.",
+      "Based on your current setup, here's what I think:",
+      "Great question! Let me break this down for you.",
+      "I've looked at your sizing requirements, and here's my take:",
+      "Interesting question. Let me walk you through this."
+    ];
+    const starter = conversationStarters[Math.floor(Math.random() * conversationStarters.length)];
+    
     // Analyze query to determine response type
     if (q.includes('splunk') && q.includes('elastic')) {
       return `# Splunk vs Elastic Stack Comparison for Your Infrastructure\n\n**Your Current Sizing:**\n- ${results.averageEPS.toLocaleString()} EPS average, ${results.peakEPS.toLocaleString()} EPS peak\n- ${results.dailyGB.toFixed(2)} GB/day data volume\n- ${totalDevices} total devices monitored\n\n**Splunk Enterprise:**\n✅ Pros:\n- Industry-leading search performance\n- Extensive app ecosystem (1000+ apps)\n- Enterprise support and professional services\n- Advanced correlation and alerting\n- Better for compliance requirements\n\n❌ Cons:\n- Higher licensing costs (~$150-200 per GB/day)\n- Estimated cost: $${(results.dailyGB * 175).toFixed(0)}/day\n- Vendor lock-in concerns\n\n**Elastic Stack (ELK):**\n✅ Pros:\n- Open source and cost-effective\n- Highly scalable architecture\n- Strong community support\n- Flexible data modeling\n- Cloud-native design\n\n❌ Cons:\n- Requires more in-house expertise\n- Support primarily through commercial license\n- Less mature SIEM features out-of-box\n\n**Recommendation for ${results.averageEPS.toLocaleString()} EPS:**\n${results.averageEPS > 10000 ? 'At your scale, both platforms work well. Splunk if budget allows and compliance is critical. Elastic if you have strong DevOps team and want cost efficiency.' : 'For your volume, Elastic Stack offers better ROI unless you need enterprise support and specific Splunk apps.'}\n\n**Infrastructure Match:**\n- Both can handle ${results.infrastructure.indexers} indexer cluster\n- Splunk: Use indexers + search heads architecture\n- Elastic: Use data nodes + coordinating nodes architecture`;
