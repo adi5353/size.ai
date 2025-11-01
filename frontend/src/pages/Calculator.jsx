@@ -293,6 +293,115 @@ export const Calculator = () => {
           </motion.div>
         </div>
       </main>
+
+      {/* Save Configuration Dialog */}
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] glass-card border-border/50">
+          <DialogHeader>
+            <DialogTitle>Save Configuration</DialogTitle>
+            <DialogDescription>
+              Save your current configuration to load it later
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="config-name">Configuration Name *</Label>
+              <Input
+                id="config-name"
+                placeholder="e.g., Production Environment 2025"
+                value={configName}
+                onChange={(e) => setConfigName(e.target.value)}
+                className="bg-secondary/50"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="config-description">Description (optional)</Label>
+              <Textarea
+                id="config-description"
+                placeholder="Add notes about this configuration..."
+                value={configDescription}
+                onChange={(e) => setConfigDescription(e.target.value)}
+                className="bg-secondary/50 resize-none"
+                rows={3}
+              />
+            </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                variant="ghost"
+                onClick={() => setSaveDialogOpen(false)}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={saveConfiguration}
+                disabled={loading}
+              >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Configuration
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Load Configuration Dialog */}
+      <Dialog open={loadDialogOpen} onOpenChange={setLoadDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] glass-card border-border/50 max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>My Configurations</DialogTitle>
+            <DialogDescription>
+              Load a previously saved configuration
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 mt-4">
+            {savedConfigs.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No saved configurations yet</p>
+                <p className="text-sm mt-2">Save your first configuration to see it here</p>
+              </div>
+            ) : (
+              savedConfigs.map((config) => (
+                <div
+                  key={config.id}
+                  className="p-4 rounded-lg border border-border/50 bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground">{config.name}</h3>
+                      {config.description && (
+                        <p className="text-sm text-muted-foreground mt-1">{config.description}</p>
+                      )}
+                      <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
+                        <span>{config.results?.totalDevices || 0} devices</span>
+                        <span>{config.results?.totalEPS || 0} EPS</span>
+                        <span>{new Date(config.updated_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2 ml-4">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => loadConfiguration(config)}
+                      >
+                        Load
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteConfiguration(config.id)}
+                        disabled={loading}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
