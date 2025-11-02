@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
 import HomePage from '@/pages/HomePage';
 import Calculator from '@/pages/Calculator';
+import DashboardPage from '@/pages/DashboardPage';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import '@/App.css';
 
@@ -14,6 +15,14 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/calculator" 
               element={
