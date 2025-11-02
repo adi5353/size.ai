@@ -410,6 +410,73 @@ async def get_login_frequency(
     return login_data
 
 
+@api_router.get("/admin/reports", response_model=List[ReportLog])
+async def get_report_logs(
+    limit: int = 100,
+    current_admin: TokenData = Depends(get_current_admin)
+):
+    """Get report generation logs (admin only)."""
+    logs = await db.report_logs.find(
+        {},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(limit).to_list(limit)
+    
+    return [ReportLog(**parse_from_mongo(log)) for log in logs]
+
+@api_router.get("/admin/reports/stats")
+async def get_report_stats(current_admin: TokenData = Depends(get_current_admin)):
+    """Get report generation statistics (admin only)."""
+    # Total reports
+    total_reports = await db.report_logs.count_documents({})
+    
+    # Reports this month
+    start_of_month = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    reports_this_month = await db.report_logs.count_documents({
+        "timestamp": {"$gte": start_of_month.isoformat()}
+    })
+    
+    # Top 5 users by report count
+    pipeline = [
+        {"$group": {"_id": "$user_id", "count": {"$sum": 1}, "user_name": {"$first": "$user_name"}, "user_email": {"$first": "$user_email"}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 5}
+    ]
+    top_users_cursor = db.report_logs.aggregate(pipeline)
+    top_users = await top_users_cursor.to_list(5)
+    
+    return {
+        "total_reports": total_reports,
+        "reports_this_month": reports_this_month,
+        "top_users": top_users
+    }
+
+@api_router.get("/admin/charts/reports")
+async def get_report_trend(
+    days: int = 7,
+    current_admin: TokenData = Depends(get_current_admin)
+):
+    """Get report generation trend data for charts (admin only)."""
+    report_data = []
+    for i in range(days, -1, -1):
+        date = datetime.now(timezone.utc) - timedelta(days=i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = date.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        count = await db.report_logs.count_documents({
+            "timestamp": {
+                "$gte": start_of_day.isoformat(),
+                "$lte": end_of_day.isoformat()
+            }
+        })
+        
+        report_data.append({
+            "date": start_of_day.strftime("%Y-%m-%d"),
+            "count": count
+        })
+    
+    return report_data
+
+
 # ============= CONFIGURATION ROUTES =============
 
 @api_router.post("/configurations", response_model=SavedConfiguration, status_code=status.HTTP_201_CREATED)
