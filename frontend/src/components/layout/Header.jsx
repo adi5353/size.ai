@@ -23,6 +23,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
   const isCalculatorPage = location.pathname === '/calculator';
   const isHomePage = location.pathname === '/';
   const isDashboardPage = location.pathname === '/dashboard';
+  const isAIAssistantPage = location.pathname === '/ai-assistant';
 
   return (
     <>
