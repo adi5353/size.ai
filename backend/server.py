@@ -199,7 +199,7 @@ async def register(user_data: UserRegister, request: Request):
     return User(**user.model_dump())
 
 @api_router.post("/auth/login", response_model=Token)
-async def login(credentials: UserLogin):
+async def login(credentials: UserLogin, request: Request):
     """Login user and return JWT token."""
     # Find user
     user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
@@ -220,7 +220,17 @@ async def login(credentials: UserLogin):
     
     # Create access token
     access_token = create_access_token(
-        data={"sub": user.id, "email": user.email}
+        data={"sub": user.id, "email": user.email, "role": user.role}
+    )
+    
+    # Log login activity
+    client_ip = request.client.host if request.client else None
+    await log_user_activity(
+        user_id=user.id,
+        user_email=user.email,
+        user_name=user.name,
+        activity_type="login",
+        ip_address=client_ip
     )
     
     return Token(access_token=access_token, token_type="bearer")
