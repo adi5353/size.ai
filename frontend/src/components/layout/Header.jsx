@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Activity, LogIn, LogOut, User, Save, Home, LayoutDashboard } from 'lucide-react';
+import { Activity, LogIn, LogOut, User, Save, Home, LayoutDashboard, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
