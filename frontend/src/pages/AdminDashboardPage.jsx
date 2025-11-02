@@ -112,10 +112,42 @@ export const AdminDashboardPage = () => {
     }
   };
 
-  const filteredActivities = activities.filter(activity =>
-    activity.user_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    activity.user_email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredActivities = activities.filter(activity => {
+    const matchesSearch = 
+      activity.user_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      activity.user_email?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesFilter = 
+      activityFilter === 'all' || activity.activity_type === activityFilter;
+    
+    return matchesSearch && matchesFilter;
+  });
+
+  const exportToCSV = () => {
+    const headers = ['User Name', 'Email', 'Activity', 'IP Address', 'User Agent', 'Timestamp'];
+    const rows = filteredActivities.map(activity => [
+      activity.user_name,
+      activity.user_email,
+      activity.activity_type,
+      activity.ip_address || 'N/A',
+      activity.user_agent || 'N/A',
+      formatDate(activity.timestamp)
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `admin-activity-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success('Activity log exported to CSV');
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString('en-US', {
