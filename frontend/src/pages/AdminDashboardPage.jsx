@@ -6,6 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Shield,
   Users,
   Activity,
@@ -16,8 +23,23 @@ import {
   RefreshCw,
   Home,
   LogOut,
+  Download,
+  Filter,
+  Calendar,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
 
 export const AdminDashboardPage = () => {
   const { token, logout } = useAuth();
