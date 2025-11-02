@@ -249,6 +249,60 @@ async def get_current_user_info(current_user: TokenData = Depends(get_current_us
     return User(**parse_from_mongo(user_doc))
 
 
+# ============= ADMIN ROUTES =============
+
+@api_router.get("/admin/users", response_model=List[User])
+async def get_all_users(current_admin: TokenData = Depends(get_current_admin)):
+    """Get all registered users (admin only)."""
+    users = await db.users.find({}, {"_id": 0, "hashed_password": 0}).to_list(1000)
+    return [User(**parse_from_mongo(user)) for user in users]
+
+@api_router.get("/admin/activity", response_model=List[UserActivity])
+async def get_user_activity(
+    limit: int = 100,
+    current_admin: TokenData = Depends(get_current_admin)
+):
+    """Get user activity logs (admin only)."""
+    activities = await db.user_activities.find(
+        {},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(limit).to_list(limit)
+    
+    return [UserActivity(**parse_from_mongo(activity)) for activity in activities]
+
+@api_router.get("/admin/stats")
+async def get_admin_stats(current_admin: TokenData = Depends(get_current_admin)):
+    """Get dashboard statistics (admin only)."""
+    # Total users
+    total_users = await db.users.count_documents({})
+    
+    # Users registered in last 7 days
+    seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
+    recent_users = await db.users.count_documents({
+        "created_at": {"$gte": seven_days_ago.isoformat()}
+    })
+    
+    # Total logins
+    total_logins = await db.user_activities.count_documents({"activity_type": "login"})
+    
+    # Total registrations
+    total_registrations = await db.user_activities.count_documents({"activity_type": "register"})
+    
+    # Recent activity (last 24 hours)
+    twenty_four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=24)
+    recent_activity = await db.user_activities.count_documents({
+        "timestamp": {"$gte": twenty_four_hours_ago.isoformat()}
+    })
+    
+    return {
+        "total_users": total_users,
+        "recent_users_7d": recent_users,
+        "total_logins": total_logins,
+        "total_registrations": total_registrations,
+        "recent_activity_24h": recent_activity
+    }
+
+
 # ============= CONFIGURATION ROUTES =============
 
 @api_router.post("/configurations", response_model=SavedConfiguration, status_code=status.HTTP_201_CREATED)
