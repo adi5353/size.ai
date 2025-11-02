@@ -23,11 +23,19 @@ export const ResultsDashboard = ({ results, devices, configuration }) => {
     return () => clearTimeout(timer);
   }, [results]);
 
-  const handleGeneratePDF = () => {
+  const handleGeneratePDF = async () => {
     try {
       generatePDFReport(results, devices, configuration);
       toast.success('PDF Report Generated!', {
         description: 'Your sizing report has been downloaded successfully.',
+      });
+      
+      // Log report generation
+      await fetch(`${API_URL}/api/reports/log?report_type=PDF Infrastructure Report`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
     } catch (error) {
       console.error('PDF generation error:', error);
