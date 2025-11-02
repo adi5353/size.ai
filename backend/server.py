@@ -111,6 +111,36 @@ class ConfigurationUpdate(BaseModel):
     configuration: Optional[Dict[str, Any]] = None
     results: Optional[Dict[str, Any]] = None
 
+# AI Chat Models
+class ChatMessage(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    session_id: str
+    role: str  # 'user' or 'assistant'
+    content: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ChatMessageCreate(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    message: str
+    session_id: str
+
+# Report Generation Models
+class ReportLog(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_email: str
+    user_name: str
+    report_type: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # Status Check Models (existing)
 class StatusCheck(BaseModel):
     model_config = ConfigDict(extra="ignore")
