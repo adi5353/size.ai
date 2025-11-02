@@ -14,6 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export const ResultsDashboard = ({ results, devices, configuration }) => {
   const [animateNumbers, setAnimateNumbers] = useState(false);
+  const { token } = useAuth();
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     setAnimateNumbers(true);
