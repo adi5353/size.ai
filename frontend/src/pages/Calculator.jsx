@@ -78,6 +78,18 @@ export const Calculator = () => {
     return calculateInfrastructure(devices, configuration);
   }, [devices, configuration]);
 
+  // Load configuration from dashboard if passed via navigation state
+  useEffect(() => {
+    if (location.state?.loadedConfig) {
+      const config = location.state.loadedConfig;
+      setDevices(config.devices);
+      setConfiguration(config.configuration);
+      toast.success(`Loaded: ${config.name}`);
+      // Clear the state to prevent reloading on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   const updateDevice = (deviceType, field, value) => {
     setDevices(prev => ({
       ...prev,
