@@ -25,6 +25,7 @@ import { Loader2, Trash2 } from 'lucide-react';
 export const Calculator = () => {
   const { isAuthenticated, token } = useAuth();
   const API_URL = process.env.REACT_APP_BACKEND_URL;
+  const location = useLocation();
 
   const [devices, setDevices] = useState({
     // Endpoints
