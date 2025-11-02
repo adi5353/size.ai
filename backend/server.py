@@ -146,7 +146,8 @@ async def log_user_activity(
     user_email: str,
     user_name: str,
     activity_type: str,
-    ip_address: Optional[str] = None
+    ip_address: Optional[str] = None,
+    user_agent: Optional[str] = None
 ):
     """Log user activity to database."""
     activity = UserActivity(
@@ -154,7 +155,8 @@ async def log_user_activity(
         user_email=user_email,
         user_name=user_name,
         activity_type=activity_type,
-        ip_address=ip_address
+        ip_address=ip_address,
+        user_agent=user_agent
     )
     
     doc = prepare_for_mongo(activity.model_dump())
