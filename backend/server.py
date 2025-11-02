@@ -73,6 +73,7 @@ class UserActivity(BaseModel):
     activity_type: str  # 'register' or 'login'
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
 
 class UserActivityCreate(BaseModel):
     user_id: str
@@ -80,6 +81,7 @@ class UserActivityCreate(BaseModel):
     user_name: str
     activity_type: str
     ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
 
 # Configuration Models
 class SavedConfiguration(BaseModel):
