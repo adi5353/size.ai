@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import DeviceInventory from '@/components/calculator/DeviceInventory';
 import ConfigurationPanel from '@/components/calculator/ConfigurationPanel';
