@@ -318,6 +318,102 @@ export const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Signup Trend Chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <Card className="glass-card p-6 border-border/30">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-heading font-bold text-foreground">
+                  Signup Trend
+                </h3>
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="7">7 Days</SelectItem>
+                    <SelectItem value="14">14 Days</SelectItem>
+                    <SelectItem value="30">30 Days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={signupData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                  <XAxis 
+                    dataKey="date" 
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af' }}
+                  />
+                  <YAxis 
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af' }}
+                  />
+                  <RechartsTooltip 
+                    contentStyle={{
+                      backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="count" 
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    dot={{ fill: '#8b5cf6', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Card>
+          </motion.div>
+
+          {/* Login Frequency Chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            <Card className="glass-card p-6 border-border/30">
+              <h3 className="text-lg font-heading font-bold text-foreground mb-4">
+                Login Frequency
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={loginData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(6, 182, 212, 0.1)" />
+                  <XAxis 
+                    dataKey="date" 
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af' }}
+                  />
+                  <YAxis 
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af' }}
+                  />
+                  <RechartsTooltip 
+                    contentStyle={{
+                      backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                      border: '1px solid rgba(6, 182, 212, 0.3)',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Bar 
+                    dataKey="count" 
+                    fill="#06b6d4"
+                    radius={[8, 8, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </motion.div>
+        </div>
+
         {/* Recent Activity */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
