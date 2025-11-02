@@ -248,6 +248,19 @@ async def get_current_user_info(current_user: TokenData = Depends(get_current_us
     
     return User(**parse_from_mongo(user_doc))
 
+@api_router.get("/auth/my-activity", response_model=List[UserActivity])
+async def get_my_activity(
+    limit: int = 20,
+    current_user: TokenData = Depends(get_current_user)
+):
+    """Get current user's activity history."""
+    activities = await db.user_activities.find(
+        {"user_id": current_user.user_id},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(limit).to_list(limit)
+    
+    return [UserActivity(**parse_from_mongo(activity)) for activity in activities]
+
 
 # ============= ADMIN ROUTES =============
 
