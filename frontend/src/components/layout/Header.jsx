@@ -72,6 +72,18 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                     </Button>
                   )}
 
+                  {!isAIAssistantPage && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => navigate('/ai-assistant')}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Bot className="w-4 h-4 mr-2" />
+                      AI Assistant 🤖
+                    </Button>
+                  )}
+
                   {!isCalculatorPage && (
                     <Button 
                       variant="ghost" 
