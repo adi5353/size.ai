@@ -25,9 +25,9 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // If already authenticated, redirect to calculator
+  // If already authenticated, redirect to dashboard
   if (isAuthenticated) {
-    navigate('/calculator');
+    navigate('/dashboard');
     return null;
   }
 
