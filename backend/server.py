@@ -55,10 +55,30 @@ class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     email: str
     name: str
+    role: str = "user"  # 'user' or 'admin'
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserInDB(User):
     hashed_password: str
+
+# User Activity Models
+class UserActivity(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_email: str
+    user_name: str
+    activity_type: str  # 'register' or 'login'
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    ip_address: Optional[str] = None
+
+class UserActivityCreate(BaseModel):
+    user_id: str
+    user_email: str
+    user_name: str
+    activity_type: str
+    ip_address: Optional[str] = None
 
 # Configuration Models
 class SavedConfiguration(BaseModel):
