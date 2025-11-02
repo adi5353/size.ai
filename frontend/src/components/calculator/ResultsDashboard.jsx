@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { generatePDFReport } from '@/utils/pdfGenerator';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const ResultsDashboard = ({ results, devices, configuration }) => {
   const [animateNumbers, setAnimateNumbers] = useState(false);
