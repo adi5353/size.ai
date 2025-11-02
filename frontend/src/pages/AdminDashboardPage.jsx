@@ -418,21 +418,43 @@ export const AdminDashboardPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
         >
           <Card className="glass-card p-6 border-border/30">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-heading font-bold text-foreground">
                 Recent Activity
               </h3>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by name or email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-secondary/50 border-border/50"
-                />
+              <div className="flex items-center gap-3">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search by name or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-secondary/50 border-border/50"
+                  />
+                </div>
+                <Select value={activityFilter} onValueChange={setActivityFilter}>
+                  <SelectTrigger className="w-40">
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Activity</SelectItem>
+                    <SelectItem value="login">Logins Only</SelectItem>
+                    <SelectItem value="register">Signups Only</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={exportToCSV}
+                  className="border-primary/30 hover:bg-primary/10"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export CSV
+                </Button>
               </div>
             </div>
 
@@ -443,6 +465,7 @@ export const AdminDashboardPage = () => {
                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">User</th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Email</th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Activity</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Device</th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">IP Address</th>
                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Timestamp</th>
                   </tr>
@@ -450,7 +473,7 @@ export const AdminDashboardPage = () => {
                 <tbody>
                   {filteredActivities.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="text-center py-8 text-muted-foreground">
+                      <td colSpan="6" className="text-center py-8 text-muted-foreground">
                         No activity found
                       </td>
                     </tr>
@@ -477,6 +500,14 @@ export const AdminDashboardPage = () => {
                               <><UserPlus className="w-3 h-3 mr-1" /> Register</>
                             )}
                           </span>
+                        </td>
+                        <td className="py-3 px-4 text-xs text-muted-foreground max-w-xs truncate" title={activity.user_agent}>
+                          {activity.user_agent ? (
+                            activity.user_agent.includes('Chrome') ? '🌐 Chrome' :
+                            activity.user_agent.includes('Firefox') ? '🦊 Firefox' :
+                            activity.user_agent.includes('Safari') ? '🧭 Safari' :
+                            activity.user_agent.includes('Edge') ? '🌊 Edge' : '💻 Other'
+                          ) : 'N/A'}
                         </td>
                         <td className="py-3 px-4 text-sm text-muted-foreground font-mono">
                           {activity.ip_address || 'N/A'}
