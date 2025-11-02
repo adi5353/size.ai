@@ -87,3 +87,28 @@ async def get_current_user_optional(
         return verify_token(credentials.credentials)
     except HTTPException:
         return None
+
+# Admin-only authentication
+async def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenData:
+    """Extract and verify admin user from JWT token."""
+    token = credentials.credentials
+    token_data = verify_token(token)
+    
+    # Import here to avoid circular dependency
+    from server import db
+    
+    # Check if user is admin
+    user_doc = await db.users.find_one({"id": token_data.user_id}, {"_id": 0})
+    if not user_doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    if user_doc.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    
+    return token_data
