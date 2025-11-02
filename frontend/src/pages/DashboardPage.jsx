@@ -106,7 +106,7 @@ export const DashboardPage = () => {
       }
 
       toast.success('Configuration deleted');
-      loadConfigurations();
+      loadDashboardData();
     } catch (error) {
       toast.error(error.message || 'Failed to delete configuration');
     }
