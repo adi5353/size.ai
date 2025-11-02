@@ -140,6 +140,25 @@ def parse_from_mongo(item: dict) -> dict:
                 pass
     return item
 
+async def log_user_activity(
+    user_id: str,
+    user_email: str,
+    user_name: str,
+    activity_type: str,
+    ip_address: Optional[str] = None
+):
+    """Log user activity to database."""
+    activity = UserActivity(
+        user_id=user_id,
+        user_email=user_email,
+        user_name=user_name,
+        activity_type=activity_type,
+        ip_address=ip_address
+    )
+    
+    doc = prepare_for_mongo(activity.model_dump())
+    await db.user_activities.insert_one(doc)
+
 
 # ============= AUTH ROUTES =============
 
