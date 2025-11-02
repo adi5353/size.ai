@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import HomePage from '@/pages/HomePage';
 import Calculator from '@/pages/Calculator';
 import DashboardPage from '@/pages/DashboardPage';
+import AIAssistantPage from '@/pages/AIAssistantPage';
 import AdminLoginPage from '@/pages/AdminLoginPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
@@ -31,6 +32,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/ai-assistant" 
+              element={
+                <ProtectedRoute>
+                  <AIAssistantPage />
                 </ProtectedRoute>
               } 
             />
