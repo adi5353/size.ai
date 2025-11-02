@@ -22,6 +22,7 @@ export const DashboardPage = () => {
   const { user, token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [configurations, setConfigurations] = useState([]);
+  const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalConfigs: 0,
@@ -34,30 +35,43 @@ export const DashboardPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadConfigurations();
+      loadDashboardData();
     } else {
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
 
-  const loadConfigurations = async () => {
+  const loadDashboardData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/api/configurations`, {
+      // Load configurations
+      const configsResponse = await fetch(`${API_URL}/api/configurations`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      if (!response.ok) {
+      if (!configsResponse.ok) {
         throw new Error('Failed to load configurations');
       }
 
-      const configs = await response.json();
+      const configs = await configsResponse.json();
       setConfigurations(configs);
       calculateStats(configs);
+
+      // Load user's activity history
+      const activityResponse = await fetch(`${API_URL}/api/auth/my-activity?limit=10`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (activityResponse.ok) {
+        const activityData = await activityResponse.json();
+        setActivities(activityData);
+      }
     } catch (error) {
-      toast.error(error.message || 'Failed to load configurations');
+      toast.error(error.message || 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
