@@ -85,11 +85,24 @@ export const AdminDashboardPage = () => {
       setUsers(usersData);
 
       // Load activities
-      const activitiesRes = await fetch(`${API_URL}/api/admin/activity?limit=50`, {
+      const activitiesRes = await fetch(`${API_URL}/api/admin/activity?limit=100`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const activitiesData = await activitiesRes.json();
       setActivities(activitiesData);
+
+      // Load chart data
+      const signupRes = await fetch(`${API_URL}/api/admin/charts/signups?days=${dateFilter}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const signupChartData = await signupRes.json();
+      setSignupData(signupChartData);
+
+      const loginRes = await fetch(`${API_URL}/api/admin/charts/logins?days=${dateFilter}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const loginChartData = await loginRes.json();
+      setLoginData(loginChartData);
 
     } catch (error) {
       toast.error('Failed to load dashboard data');
