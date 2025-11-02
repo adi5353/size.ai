@@ -17,6 +17,7 @@ from auth import (
     create_access_token, 
     get_current_user,
     get_current_user_optional,
+    get_current_admin,
     Token,
     TokenData
 )
