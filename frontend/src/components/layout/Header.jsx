@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Activity, LogIn, LogOut, User, Save, Home } from 'lucide-react';
+import { Activity, LogIn, LogOut, User, Save, Home, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -22,6 +22,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
 
   const isCalculatorPage = location.pathname === '/calculator';
   const isHomePage = location.pathname === '/';
+  const isDashboardPage = location.pathname === '/dashboard';
 
   return (
     <>
@@ -34,7 +35,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
@@ -57,8 +58,20 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
             >
               {isAuthenticated ? (
                 <>
-                  {/* Show "Go to Calculator" on home page */}
-                  {isHomePage && (
+                  {/* Show navigation buttons based on current page */}
+                  {!isDashboardPage && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => navigate('/dashboard')}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  )}
+
+                  {!isCalculatorPage && (
                     <Button 
                       variant="ghost" 
                       size="sm"
@@ -66,7 +79,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                       className="text-muted-foreground hover:text-foreground"
                     >
                       <Activity className="w-4 h-4 mr-2" />
-                      Go to Calculator
+                      Calculator
                     </Button>
                   )}
 
@@ -79,7 +92,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                       className="text-muted-foreground hover:text-foreground"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      Save to Account
+                      Save
                     </Button>
                   )}
 
@@ -100,20 +113,29 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
+                      {!isDashboardPage && (
+                        <>
+                          <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                            <LayoutDashboard className="mr-2 h-4 w-4" />
+                            <span>Dashboard</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
+                      {!isCalculatorPage && (
+                        <>
+                          <DropdownMenuItem onClick={() => navigate('/calculator')}>
+                            <Activity className="mr-2 h-4 w-4" />
+                            <span>Calculator</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
                       {isCalculatorPage && onLoadConfigs && (
                         <>
                           <DropdownMenuItem onClick={onLoadConfigs}>
                             <Save className="mr-2 h-4 w-4" />
                             <span>My Configurations</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                        </>
-                      )}
-                      {isCalculatorPage && (
-                        <>
-                          <DropdownMenuItem onClick={() => navigate('/')}>
-                            <Home className="mr-2 h-4 w-4" />
-                            <span>Home</span>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                         </>
