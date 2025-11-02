@@ -48,7 +48,11 @@ export const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [activities, setActivities] = useState([]);
+  const [signupData, setSignupData] = useState([]);
+  const [loginData, setLoginData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [activityFilter, setActivityFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('7');
 
   const API_URL = process.env.REACT_APP_BACKEND_URL;
 
