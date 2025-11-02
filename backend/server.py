@@ -232,12 +232,14 @@ async def login(credentials: UserLogin, request: Request):
     
     # Log login activity
     client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent", None)
     await log_user_activity(
         user_id=user.id,
         user_email=user.email,
         user_name=user.name,
         activity_type="login",
-        ip_address=client_ip
+        ip_address=client_ip,
+        user_agent=user_agent
     )
     
     return Token(access_token=access_token, token_type="bearer")
