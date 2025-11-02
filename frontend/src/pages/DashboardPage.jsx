@@ -361,6 +361,61 @@ export const DashboardPage = () => {
             </div>
           )}
         </motion.div>
+
+        {/* Recent Activity Section */}
+        {activities.length > 0 && (
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <h2 className="text-2xl font-heading font-bold text-foreground mb-6">
+              Your Recent Activity
+            </h2>
+
+            <Card className="glass-card p-6 border-border/30">
+              <div className="space-y-3">
+                {activities.map((activity, index) => (
+                  <motion.div
+                    key={activity.id}
+                    className="flex items-center justify-between p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        activity.activity_type === 'login'
+                          ? 'bg-primary/10'
+                          : 'bg-accent/10'
+                      }`}>
+                        {activity.activity_type === 'login' ? (
+                          <Activity className="w-5 h-5 text-primary" />
+                        ) : (
+                          <Users className="w-5 h-5 text-accent" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-foreground">
+                          {activity.activity_type === 'login' ? 'Logged In' : 'Account Created'}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {formatDate(activity.timestamp)}
+                        </div>
+                      </div>
+                    </div>
+                    {activity.ip_address && (
+                      <div className="text-sm text-muted-foreground font-mono">
+                        IP: {activity.ip_address}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        )}
       </main>
 
       {/* Footer */}
