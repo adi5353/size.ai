@@ -152,7 +152,7 @@ export const AdminLoginPage = () => {
 
         {/* Branding */}
         <div className="text-center mt-6 text-sm text-muted-foreground">
-          <p>Secured by <span className="text-primary font-semibold">Outskill</span> x <span className="text-accent font-semibold">Emergent</span></p>
+          <p>Secured by size.ai</p>
         </div>
       </motion.div>
 
