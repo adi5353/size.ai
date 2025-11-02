@@ -323,6 +323,62 @@ async def get_admin_stats(current_admin: TokenData = Depends(get_current_admin))
         "recent_activity_24h": recent_activity
     }
 
+@api_router.get("/admin/charts/signups")
+async def get_signup_trend(
+    days: int = 7,
+    current_admin: TokenData = Depends(get_current_admin)
+):
+    """Get signup trend data for charts (admin only)."""
+    # Get signups for last N days
+    signup_data = []
+    for i in range(days, -1, -1):
+        date = datetime.now(timezone.utc) - timedelta(days=i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = date.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        count = await db.user_activities.count_documents({
+            "activity_type": "register",
+            "timestamp": {
+                "$gte": start_of_day.isoformat(),
+                "$lte": end_of_day.isoformat()
+            }
+        })
+        
+        signup_data.append({
+            "date": start_of_day.strftime("%Y-%m-%d"),
+            "count": count
+        })
+    
+    return signup_data
+
+@api_router.get("/admin/charts/logins")
+async def get_login_frequency(
+    days: int = 7,
+    current_admin: TokenData = Depends(get_current_admin)
+):
+    """Get login frequency data for charts (admin only)."""
+    # Get logins for last N days
+    login_data = []
+    for i in range(days, -1, -1):
+        date = datetime.now(timezone.utc) - timedelta(days=i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = date.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        count = await db.user_activities.count_documents({
+            "activity_type": "login",
+            "timestamp": {
+                "$gte": start_of_day.isoformat(),
+                "$lte": end_of_day.isoformat()
+            }
+        })
+        
+        login_data.append({
+            "date": start_of_day.strftime("%Y-%m-%d"),
+            "count": count
+        })
+    
+    return login_data
+
 
 # ============= CONFIGURATION ROUTES =============
 
