@@ -5,6 +5,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import HomePage from '@/pages/HomePage';
 import Calculator from '@/pages/Calculator';
 import DashboardPage from '@/pages/DashboardPage';
+import AdminLoginPage from '@/pages/AdminLoginPage';
+import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import '@/App.css';
 
@@ -15,6 +17,15 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/admin-login" element={<AdminLoginPage />} />
+            <Route 
+              path="/admin/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/dashboard" 
               element={
