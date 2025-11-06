@@ -301,14 +301,24 @@ async def login(credentials: UserLogin, request: Request):
 @api_router.get("/auth/me", response_model=User)
 async def get_current_user_info(current_user: TokenData = Depends(get_current_user)):
     """Get current user information."""
-    user_doc = await db.users.find_one({"id": current_user.user_id}, {"_id": 0})
-    if not user_doc:
+    try:
+        user_doc = await db.users.find_one({"id": current_user.user_id}, {"_id": 0})
+        if not user_doc:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        return User(**parse_from_mongo(user_doc))
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching user info: {e}")
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch user information"
         )
-    
-    return User(**parse_from_mongo(user_doc))
 
 @api_router.get("/auth/my-activity", response_model=List[UserActivity])
 async def get_my_activity(
