@@ -464,6 +464,307 @@ class BackendTester:
         except Exception as e:
             self.log(f"❌ Verification error: {str(e)}", "ERROR")
             return False
+
+    # ============= NEW DATABASE OPTIMIZATION TESTS =============
+    
+    def test_health_check_endpoint(self):
+        """Test new health check endpoint"""
+        self.log("Testing Health Check Endpoint (GET /api/health)")
+        
+        try:
+            response = self.session.get(f"{API_BASE}/health")
+            
+            if response.status_code == 200:
+                health_data = response.json()
+                self.log(f"✅ Health check successful: {health_data}")
+                
+                # Verify response structure
+                required_fields = ["status", "database", "version"]
+                for field in required_fields:
+                    if field not in health_data:
+                        self.log(f"❌ Missing field in health response: {field}", "ERROR")
+                        return False
+                
+                # Verify status values
+                if health_data["status"] == "healthy" and health_data["database"] == "connected":
+                    self.log("✅ Database connection is healthy")
+                    return True
+                else:
+                    self.log(f"❌ Unhealthy status: {health_data}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Health check failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Health check error: {str(e)}", "ERROR")
+            return False
+    
+    def test_user_activity_logging(self):
+        """Test user activity logging with new indexes"""
+        self.log("Testing User Activity Logging (GET /api/auth/my-activity)")
+        
+        if not self.access_token:
+            self.log("❌ No access token available", "ERROR")
+            return False
+            
+        try:
+            response = self.session.get(f"{API_BASE}/auth/my-activity")
+            
+            if response.status_code == 200:
+                activities = response.json()
+                self.log(f"✅ Retrieved {len(activities)} user activities")
+                
+                # Verify we have at least login and registration activities
+                if len(activities) >= 2:
+                    # Check if activities are sorted by timestamp (descending)
+                    timestamps = [activity["timestamp"] for activity in activities]
+                    is_sorted = all(timestamps[i] >= timestamps[i+1] for i in range(len(timestamps)-1))
+                    
+                    if is_sorted:
+                        self.log("✅ Activities are properly sorted by timestamp (descending)")
+                        
+                        # Verify activity structure
+                        activity = activities[0]
+                        required_fields = ["id", "user_id", "user_email", "activity_type", "timestamp"]
+                        for field in required_fields:
+                            if field not in activity:
+                                self.log(f"❌ Missing field in activity: {field}", "ERROR")
+                                return False
+                        
+                        return True
+                    else:
+                        self.log("❌ Activities are not properly sorted", "ERROR")
+                        return False
+                else:
+                    self.log(f"❌ Expected at least 2 activities, got {len(activities)}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Get user activity failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ User activity test error: {str(e)}", "ERROR")
+            return False
+    
+    def create_admin_user(self):
+        """Create an admin user for testing admin endpoints"""
+        self.log("Creating Admin User for Testing")
+        
+        # Generate unique admin email
+        unique_id = str(uuid.uuid4())[:8]
+        admin_user = {
+            "name": "Admin User",
+            "email": f"admin{unique_id}@example.com",
+            "password": "adminpass123"
+        }
+        
+        try:
+            # Register admin user
+            response = self.session.post(f"{API_BASE}/auth/register", json=admin_user)
+            
+            if response.status_code == 201:
+                self.log("✅ Admin user registered successfully")
+                
+                # Login as admin
+                login_data = {
+                    "email": admin_user["email"],
+                    "password": admin_user["password"]
+                }
+                
+                response = self.session.post(f"{API_BASE}/auth/login", json=login_data)
+                
+                if response.status_code == 200:
+                    token_data = response.json()
+                    admin_token = token_data["access_token"]
+                    self.log("✅ Admin user logged in successfully")
+                    return admin_token
+                else:
+                    self.log(f"❌ Admin login failed: {response.status_code}", "ERROR")
+                    return None
+            else:
+                self.log(f"❌ Admin registration failed: {response.status_code}", "ERROR")
+                return None
+                
+        except Exception as e:
+            self.log(f"❌ Admin user creation error: {str(e)}", "ERROR")
+            return None
+    
+    def test_admin_stats_endpoint(self):
+        """Test admin stats endpoint with optimized queries"""
+        self.log("Testing Admin Stats Endpoint (GET /api/admin/stats)")
+        
+        # Create admin user and get token
+        admin_token = self.create_admin_user()
+        if not admin_token:
+            self.log("❌ Could not create admin user", "ERROR")
+            return False
+        
+        # Save current token
+        original_auth = self.session.headers.get("Authorization")
+        
+        # Set admin token
+        self.session.headers.update({"Authorization": f"Bearer {admin_token}"})
+        
+        try:
+            response = self.session.get(f"{API_BASE}/admin/stats")
+            
+            if response.status_code == 200:
+                stats = response.json()
+                self.log(f"✅ Admin stats retrieved: {stats}")
+                
+                # Verify response structure
+                required_fields = ["total_users", "recent_users_7d", "total_logins", "total_registrations", "recent_activity_24h"]
+                for field in required_fields:
+                    if field not in stats:
+                        self.log(f"❌ Missing field in stats: {field}", "ERROR")
+                        return False
+                
+                # Verify data types and reasonable values
+                if (isinstance(stats["total_users"], int) and stats["total_users"] >= 0 and
+                    isinstance(stats["total_logins"], int) and stats["total_logins"] >= 0):
+                    self.log("✅ Stats data structure is valid")
+                    return True
+                else:
+                    self.log("❌ Invalid stats data types or values", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Admin stats failed: {response.status_code} - {response.text}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin stats error: {str(e)}", "ERROR")
+            return False
+        finally:
+            # Restore original token
+            if original_auth:
+                self.session.headers.update({"Authorization": original_auth})
+    
+    def test_admin_chart_endpoints(self):
+        """Test admin chart endpoints with aggregation pipelines"""
+        self.log("Testing Admin Chart Endpoints (Optimized Aggregation)")
+        
+        # Create admin user and get token
+        admin_token = self.create_admin_user()
+        if not admin_token:
+            self.log("❌ Could not create admin user", "ERROR")
+            return False
+        
+        # Save current token
+        original_auth = self.session.headers.get("Authorization")
+        
+        # Set admin token
+        self.session.headers.update({"Authorization": f"Bearer {admin_token}"})
+        
+        try:
+            # Test signup chart endpoint
+            response = self.session.get(f"{API_BASE}/admin/charts/signups?days=7")
+            
+            if response.status_code == 200:
+                signup_data = response.json()
+                self.log(f"✅ Signup chart data retrieved: {len(signup_data)} data points")
+                
+                # Verify we get 8 data points (7 days + today)
+                if len(signup_data) == 8:
+                    # Verify data structure
+                    if all("date" in item and "count" in item for item in signup_data):
+                        self.log("✅ Signup chart data structure is valid")
+                    else:
+                        self.log("❌ Invalid signup chart data structure", "ERROR")
+                        return False
+                else:
+                    self.log(f"❌ Expected 8 data points, got {len(signup_data)}", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Signup chart failed: {response.status_code}", "ERROR")
+                return False
+            
+            # Test login chart endpoint
+            response = self.session.get(f"{API_BASE}/admin/charts/logins?days=7")
+            
+            if response.status_code == 200:
+                login_data = response.json()
+                self.log(f"✅ Login chart data retrieved: {len(login_data)} data points")
+                
+                # Verify structure
+                if len(login_data) == 8 and all("date" in item and "count" in item for item in login_data):
+                    self.log("✅ Login chart data structure is valid")
+                else:
+                    self.log("❌ Invalid login chart data", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Login chart failed: {response.status_code}", "ERROR")
+                return False
+            
+            # Test reports chart endpoint
+            response = self.session.get(f"{API_BASE}/admin/charts/reports?days=7")
+            
+            if response.status_code == 200:
+                report_data = response.json()
+                self.log(f"✅ Report chart data retrieved: {len(report_data)} data points")
+                
+                # Verify structure
+                if len(report_data) == 8 and all("date" in item and "count" in item for item in report_data):
+                    self.log("✅ Report chart data structure is valid")
+                    return True
+                else:
+                    self.log("❌ Invalid report chart data", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Report chart failed: {response.status_code}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ Admin chart endpoints error: {str(e)}", "ERROR")
+            return False
+        finally:
+            # Restore original token
+            if original_auth:
+                self.session.headers.update({"Authorization": original_auth})
+    
+    def test_ai_chat_error_handling(self):
+        """Test AI chat endpoint error handling"""
+        self.log("Testing AI Chat Error Handling (POST /api/ai/chat)")
+        
+        if not self.access_token:
+            self.log("❌ No access token available", "ERROR")
+            return False
+        
+        chat_data = {
+            "message": "Hello, can you help me with SIEM sizing?",
+            "session_id": str(uuid.uuid4())
+        }
+        
+        try:
+            response = self.session.post(f"{API_BASE}/ai/chat", json=chat_data)
+            
+            # The endpoint should either work (200) or fail gracefully (500 with proper error)
+            if response.status_code == 200:
+                chat_response = response.json()
+                self.log(f"✅ AI chat working: {chat_response}")
+                
+                # Verify response structure
+                if "message" in chat_response and "session_id" in chat_response:
+                    return True
+                else:
+                    self.log("❌ Invalid AI chat response structure", "ERROR")
+                    return False
+            elif response.status_code == 500:
+                # This is expected if AI service is not configured
+                error_data = response.json()
+                if "detail" in error_data:
+                    self.log(f"✅ AI chat error handling working: {error_data['detail']}")
+                    return True
+                else:
+                    self.log("❌ AI chat error response missing detail", "ERROR")
+                    return False
+            else:
+                self.log(f"❌ Unexpected AI chat response: {response.status_code}", "ERROR")
+                return False
+                
+        except Exception as e:
+            self.log(f"❌ AI chat test error: {str(e)}", "ERROR")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests in sequence"""
