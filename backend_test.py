@@ -580,7 +580,7 @@ class BackendTester:
         # Create admin user and get token
         admin_token = self.get_admin_token()
         if not admin_token:
-            self.log("❌ Could not create admin user", "ERROR")
+            self.log("❌ Could not get admin token", "ERROR")
             return False
         
         # Save current token
@@ -630,7 +630,7 @@ class BackendTester:
         # Create admin user and get token
         admin_token = self.get_admin_token()
         if not admin_token:
-            self.log("❌ Could not create admin user", "ERROR")
+            self.log("❌ Could not get admin token", "ERROR")
             return False
         
         # Save current token
