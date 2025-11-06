@@ -250,41 +250,53 @@ async def register(user_data: UserRegister, request: Request):
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin, request: Request):
     """Login user and return JWT token."""
-    # Find user
-    user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
-    if not user_doc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+    try:
+        # Find user
+        user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+        if not user_doc:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+        
+        user = UserInDB(**parse_from_mongo(user_doc))
+        
+        # Verify password
+        if not verify_password(credentials.password, user.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+        
+        # Create access token
+        access_token = create_access_token(
+            data={"sub": user.id, "email": user.email, "role": user.role}
         )
-    
-    user = UserInDB(**parse_from_mongo(user_doc))
-    
-    # Verify password
-    if not verify_password(credentials.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+        
+        # Log login activity
+        client_ip = request.client.host if request.client else None
+        user_agent = request.headers.get("user-agent", None)
+        await log_user_activity(
+            user_id=user.id,
+            user_email=user.email,
+            user_name=user.name,
+            activity_type="login",
+            ip_address=client_ip,
+            user_agent=user_agent
         )
-    
-    # Create access token
-    access_token = create_access_token(
-        data={"sub": user.id, "email": user.email, "role": user.role}
-    )
-    
-    # Log login activity
-    client_ip = request.client.host if request.client else None
-    user_agent = request.headers.get("user-agent", None)
-    await log_user_activity(
-        user_id=user.id,
-        user_email=user.email,
-        user_name=user.name,
-        activity_type="login",
-        ip_address=client_ip,
-        user_agent=user_agent
-    )
-    
-    return Token(access_token=access_token, token_type="bearer")
+        
+        logger.info(f"User logged in: {user.email}")
+        
+        return Token(access_token=access_token, token_type="bearer")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during user login: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to login"
+        )
 
 @api_router.get("/auth/me", response_model=User)
 async def get_current_user_info(current_user: TokenData = Depends(get_current_user)):
