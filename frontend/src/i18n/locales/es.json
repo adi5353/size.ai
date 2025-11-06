@@ -1,0 +1,59 @@
+{
+  "common": {
+    "appName": "size.ai",
+    "appTagline": "Dimensionamiento de Infraestructura SIEM y XDR con IA",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "reset": "Restablecer"
+  },
+  "nav": {
+    "home": "Inicio",
+    "calculator": "Calculadora",
+    "dashboard": "Panel",
+    "aiAssistant": "Asistente IA",
+    "admin": "Admin",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "loginRegister": "Iniciar Sesión / Registrarse"
+  },
+  "home": {
+    "hero": {
+      "title": "Dimensionamiento SIEM y XDR con IA",
+      "subtitle": "Planifique su infraestructura de seguridad con confianza. Calcule hardware, almacenamiento y costos para su implementación SIEM/XDR con precisión profesional.",
+      "cta": "Comenzar Gratis",
+      "learnMore": "Más Información",
+      "noCreditCard": "No se Requiere Tarjeta de Crédito",
+      "freeForever": "Gratis Para Siempre",
+      "instantAccess": "Acceso Instantáneo"
+    }
+  },
+  "calculator": {
+    "title": "Calculadora de Dimensionamiento de Infraestructura",
+    "deviceInventory": "Inventario de Dispositivos",
+    "configuration": "Configuración",
+    "results": "Resultados",
+    "saveConfiguration": "Guardar en Cuenta",
+    "loadConfiguration": "Cargar Configuración",
+    "exportPDF": "Exportar Informe PDF",
+    "resetCalculator": "Restablecer Calculadora"
+  },
+  "compliance": {
+    "GDPR": "GDPR (Protección de Datos UE)",
+    "CCPA": "CCPA (Privacidad California)",
+    "PIPEDA": "PIPEDA (Privacidad Canadá)",
+    "HIPAA": "HIPAA (Salud EE.UU.)",
+    "PCI_DSS": "PCI-DSS (Tarjetas de Pago)",
+    "SOC2": "SOC 2 (Servicios en la Nube)",
+    "NONE": "Personalizado / Sin Cumplimiento Específico"
+  }
+}

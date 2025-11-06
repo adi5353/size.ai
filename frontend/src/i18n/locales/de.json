@@ -1,0 +1,59 @@
+{
+  "common": {
+    "appName": "size.ai",
+    "appTagline": "KI-gestützte SIEM & XDR Infrastrukturdimensionierung",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Senden",
+    "reset": "Zurücksetzen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "calculator": "Rechner",
+    "dashboard": "Dashboard",
+    "aiAssistant": "KI-Assistent",
+    "admin": "Admin",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "logout": "Abmelden",
+    "loginRegister": "Anmelden / Registrieren"
+  },
+  "home": {
+    "hero": {
+      "title": "KI-gestützte SIEM & XDR Dimensionierung",
+      "subtitle": "Planen Sie Ihre Sicherheitsinfrastruktur mit Zuversicht. Berechnen Sie Hardware, Speicher und Kosten für Ihre SIEM/XDR-Bereitstellung mit professioneller Genauigkeit.",
+      "cta": "Kostenlos Starten",
+      "learnMore": "Mehr Erfahren",
+      "noCreditCard": "Keine Kreditkarte Erforderlich",
+      "freeForever": "Für Immer Kostenlos",
+      "instantAccess": "Sofortiger Zugang"
+    }
+  },
+  "calculator": {
+    "title": "Infrastrukturdimensionierungs-Rechner",
+    "deviceInventory": "Geräteinventar",
+    "configuration": "Konfiguration",
+    "results": "Ergebnisse",
+    "saveConfiguration": "Im Konto Speichern",
+    "loadConfiguration": "Konfiguration Laden",
+    "exportPDF": "PDF-Bericht Exportieren",
+    "resetCalculator": "Rechner Zurücksetzen"
+  },
+  "compliance": {
+    "GDPR": "DSGVO (EU-Datenschutz)",
+    "CCPA": "CCPA (Kalifornien-Datenschutz)",
+    "PIPEDA": "PIPEDA (Kanada-Datenschutz)",
+    "HIPAA": "HIPAA (US-Gesundheitswesen)",
+    "PCI_DSS": "PCI-DSS (Zahlungskarten)",
+    "SOC2": "SOC 2 (Cloud-Dienste)",
+    "NONE": "Benutzerdefiniert / Keine Spezifische Compliance"
+  }
+}

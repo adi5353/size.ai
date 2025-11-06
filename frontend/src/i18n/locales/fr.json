@@ -1,0 +1,59 @@
+{
+  "common": {
+    "appName": "size.ai",
+    "appTagline": "Dimensionnement d'Infrastructure SIEM et XDR Alimenté par IA",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre",
+    "reset": "Réinitialiser"
+  },
+  "nav": {
+    "home": "Accueil",
+    "calculator": "Calculatrice",
+    "dashboard": "Tableau de Bord",
+    "aiAssistant": "Assistant IA",
+    "admin": "Admin",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "loginRegister": "Connexion / S'inscrire"
+  },
+  "home": {
+    "hero": {
+      "title": "Dimensionnement SIEM et XDR Alimenté par IA",
+      "subtitle": "Planifiez votre infrastructure de sécurité en toute confiance. Calculez le matériel, le stockage et les coûts pour votre déploiement SIEM/XDR avec une précision professionnelle.",
+      "cta": "Commencer Gratuitement",
+      "learnMore": "En Savoir Plus",
+      "noCreditCard": "Aucune Carte de Crédit Requise",
+      "freeForever": "Gratuit Pour Toujours",
+      "instantAccess": "Accès Instantané"
+    }
+  },
+  "calculator": {
+    "title": "Calculatrice de Dimensionnement d'Infrastructure",
+    "deviceInventory": "Inventaire des Appareils",
+    "configuration": "Configuration",
+    "results": "Résultats",
+    "saveConfiguration": "Enregistrer sur le Compte",
+    "loadConfiguration": "Charger la Configuration",
+    "exportPDF": "Exporter le Rapport PDF",
+    "resetCalculator": "Réinitialiser la Calculatrice"
+  },
+  "compliance": {
+    "GDPR": "RGPD (Protection des Données UE)",
+    "CCPA": "CCPA (Confidentialité Californie)",
+    "PIPEDA": "PIPEDA (Confidentialité Canada)",
+    "HIPAA": "HIPAA (Santé États-Unis)",
+    "PCI_DSS": "PCI-DSS (Cartes de Paiement)",
+    "SOC2": "SOC 2 (Services Cloud)",
+    "NONE": "Personnalisé / Aucune Conformité Spécifique"
+  }
+}
