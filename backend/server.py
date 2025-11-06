@@ -414,25 +414,53 @@ async def get_login_frequency(
     days: int = 7,
     current_admin: TokenData = Depends(get_current_admin)
 ):
-    """Get login frequency data for charts (admin only)."""
-    # Get logins for last N days
+    """Get login frequency data for charts (admin only) - optimized with aggregation."""
+    # Calculate date range
+    end_date = datetime.now(timezone.utc)
+    start_date = end_date - timedelta(days=days)
+    
+    # Use aggregation pipeline for better performance
+    pipeline = [
+        {
+            "$match": {
+                "activity_type": "login",
+                "timestamp": {
+                    "$gte": start_date.isoformat(),
+                    "$lte": end_date.isoformat()
+                }
+            }
+        },
+        {
+            "$project": {
+                "date": {
+                    "$substr": ["$timestamp", 0, 10]  # Extract YYYY-MM-DD
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$date",
+                "count": {"$sum": 1}
+            }
+        },
+        {
+            "$sort": {"_id": 1}
+        }
+    ]
+    
+    results = await db.user_activities.aggregate(pipeline).to_list(days + 1)
+    
+    # Create a map of dates to counts
+    date_map = {item["_id"]: item["count"] for item in results}
+    
+    # Fill in all dates (including zeros)
     login_data = []
     for i in range(days, -1, -1):
         date = datetime.now(timezone.utc) - timedelta(days=i)
-        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = date.replace(hour=23, minute=59, second=59, microsecond=999999)
-        
-        count = await db.user_activities.count_documents({
-            "activity_type": "login",
-            "timestamp": {
-                "$gte": start_of_day.isoformat(),
-                "$lte": end_of_day.isoformat()
-            }
-        })
-        
+        date_str = date.strftime("%Y-%m-%d")
         login_data.append({
-            "date": start_of_day.strftime("%Y-%m-%d"),
-            "count": count
+            "date": date_str,
+            "count": date_map.get(date_str, 0)
         })
     
     return login_data
