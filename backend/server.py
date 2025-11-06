@@ -725,6 +725,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_db_client():
+    """Initialize database connection and setup indexes on startup."""
+    global db
+    await db_manager.connect()
+    db = db_manager.db
+    logger.info("Database initialized successfully with connection pooling and indexes")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    """Close database connection on shutdown."""
+    await db_manager.close()
