@@ -695,12 +695,48 @@ async def get_report_trend(
 
 # ============= CONFIGURATION ROUTES =============
 
-@api_router.post("/configurations", response_model=SavedConfiguration, status_code=status.HTTP_201_CREATED)
+@api_router.post(
+    "/configurations",
+    response_model=SavedConfiguration,
+    status_code=status.HTTP_201_CREATED,
+    summary="Save Configuration",
+    description="Save a new SIEM sizing configuration",
+    tags=["Configurations"],
+    responses={
+        201: {
+            "description": "Configuration saved successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": "config-uuid",
+                        "user_id": "user-uuid",
+                        "name": "Production Environment",
+                        "description": "Main datacenter sizing",
+                        "devices": {"workstations": 500, "servers": 50},
+                        "configuration": {"retention": 90, "compliance": "PCI-DSS"},
+                        "results": {"storage_tb": 120, "monthly_cost": 15000},
+                        "created_at": "2025-01-01T00:00:00Z",
+                        "updated_at": "2025-01-01T00:00:00Z"
+                    }
+                }
+            }
+        },
+        401: {"description": "Authentication required"}
+    }
+)
 async def create_configuration(
     config_data: ConfigurationCreate,
     current_user: TokenData = Depends(get_current_user)
 ):
-    """Save a new configuration for the authenticated user."""
+    """
+    Save a new sizing configuration for the authenticated user.
+    
+    - **name**: Configuration name
+    - **description**: Optional description
+    - **devices**: Device inventory (quantities and types)
+    - **configuration**: Sizing parameters (retention, compliance, etc.)
+    - **results**: Calculated results (storage, costs, etc.)
+    """
     try:
         config = SavedConfiguration(
             user_id=current_user.user_id,
