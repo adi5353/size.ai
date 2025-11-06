@@ -731,12 +731,6 @@ async def chat_with_assistant(
         # Generate or use provided session ID
         session_id = chat_data.session_id or str(uuid.uuid4())
         
-        # Get last 10 messages for context
-        previous_messages = await db.chat_messages.find(
-            {"user_id": current_user.user_id, "session_id": session_id},
-            {"_id": 0}
-        ).sort("timestamp", 1).limit(10).to_list(10)
-        
         # Initialize AI chat
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
