@@ -1178,9 +1178,22 @@ logger = logging.getLogger(__name__)
 async def startup_db_client():
     """Initialize database connection and setup indexes on startup."""
     global db
+    
+    # Record start time for uptime tracking
+    app.state.start_time = time.time()
+    
+    # Initialize database
     await db_manager.connect()
     db = db_manager.db
     logger.info("Database initialized successfully with connection pooling and indexes")
+    
+    # Log startup
+    logger.info("Application started successfully", extra={
+        "extra_data": {
+            "environment": os.environ.get('ENV', 'development'),
+            "version": "1.0.0"
+        }
+    })
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
