@@ -31,8 +31,22 @@ load_dotenv(ROOT_DIR / '.env')
 # Database will be initialized via db_manager
 db = None
 
-# Create the main app without a prefix
-app = FastAPI()
+# Create the main app with API documentation
+app = FastAPI(
+    title="size.ai API",
+    version="1.0.0",
+    description="SIEM & XDR Infrastructure Sizing Calculator API - AI-powered infrastructure planning and cost estimation",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_tags=[
+        {"name": "Authentication", "description": "User authentication and authorization"},
+        {"name": "Configurations", "description": "Save and manage sizing configurations"},
+        {"name": "AI Assistant", "description": "AI-powered insights and recommendations"},
+        {"name": "Admin", "description": "Administrative endpoints (admin only)"},
+        {"name": "Reports", "description": "Report generation and logging"},
+        {"name": "Health", "description": "System health and monitoring"}
+    ]
+)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
