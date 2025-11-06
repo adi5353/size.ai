@@ -63,7 +63,8 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
-        <Toaster />
+        <Toaster position="top-right" />
+        <InstallPrompt />
       </AuthProvider>
     </div>
   );
