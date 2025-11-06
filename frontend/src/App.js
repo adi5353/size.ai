@@ -10,6 +10,7 @@ import CostComparisonPage from '@/pages/CostComparisonPage';
 import AdminLoginPage from '@/pages/AdminLoginPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import '@/App.css';
 
 function App() {
