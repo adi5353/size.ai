@@ -331,6 +331,18 @@ frontend:
           agent: "testing"
           comment: "✅ PASSED: All input fields accept numeric values correctly. Tested with negative numbers, large numbers, and valid inputs. Sliders are draggable and responsive. Dropdowns open and close properly. UI is responsive and handles user interactions well."
 
+  - task: "Real-World SIEM Deployment Scenarios"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/calculator/ScenarioSelector.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ IMPLEMENTED: Created ScenarioSelector component with 6 pre-built templates (Fortune 500, MSP/Cloud, Cloud Startup, Finance, Healthcare, Manufacturing). Integrated into Calculator.jsx with 'Load Scenario' button. Implemented device and configuration mapping logic in handleApplyScenario function. Modal displays with category filters, scenario cards showing device counts/EPS/compliance, and Apply button. Needs comprehensive testing to verify: 1) Modal opens correctly, 2) Scenario selection works, 3) Apply button populates calculator with correct device quantities, 4) Configuration settings are applied properly, 5) Toast notifications appear, 6) Calculator updates with scenario data."
+
 metadata:
   created_by: "main_agent"
   version: "2.0"
