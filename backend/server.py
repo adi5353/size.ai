@@ -372,9 +372,24 @@ async def login(credentials: UserLogin, request: Request):
             detail="Failed to login"
         )
 
-@api_router.get("/auth/me", response_model=User)
+@api_router.get(
+    "/auth/me",
+    response_model=User,
+    summary="Get Current User",
+    description="Retrieve authenticated user information",
+    tags=["Authentication"],
+    responses={
+        200: {"description": "User information retrieved successfully"},
+        401: {"description": "Invalid or expired token"},
+        404: {"description": "User not found"}
+    }
+)
 async def get_current_user_info(current_user: TokenData = Depends(get_current_user)):
-    """Get current user information."""
+    """
+    Get information about the currently authenticated user.
+    
+    Requires valid JWT token in Authorization header.
+    """
     try:
         user_doc = await db.users.find_one({"id": current_user.user_id}, {"_id": 0})
         if not user_doc:
