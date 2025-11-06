@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, timedelta
+import time
 
 # Import auth utilities
 from auth import (
@@ -24,9 +25,21 @@ from auth import (
 # Import database manager
 from database import db_manager
 
+# Import logging configuration
+from logging_config import setup_logging, calculation_logger, performance_logger
+
+# Import middleware
+from middleware import RequestLoggingMiddleware, SecurityHeadersMiddleware
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Setup logging
+setup_logging(
+    log_level=os.environ.get('LOG_LEVEL', 'INFO'),
+    log_format=os.environ.get('LOG_FORMAT', 'json')
+)
 
 # Database will be initialized via db_manager
 db = None
@@ -48,6 +61,10 @@ app = FastAPI(
         {"name": "Health", "description": "System health and monitoring"}
     ]
 )
+
+# Add middleware
+app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
