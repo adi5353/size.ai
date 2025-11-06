@@ -211,9 +211,41 @@ async def log_user_activity(
 
 # ============= AUTH ROUTES =============
 
-@api_router.post("/auth/register", response_model=User, status_code=status.HTTP_201_CREATED)
+@api_router.post(
+    "/auth/register",
+    response_model=User,
+    status_code=status.HTTP_201_CREATED,
+    summary="Register New User",
+    description="Create a new user account",
+    tags=["Authentication"],
+    responses={
+        201: {
+            "description": "User successfully registered",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": "123e4567-e89b-12d3-a456-426614174000",
+                        "email": "user@example.com",
+                        "name": "John Doe",
+                        "role": "user",
+                        "created_at": "2025-01-01T00:00:00Z"
+                    }
+                }
+            }
+        },
+        400: {"description": "Email already registered or invalid input"}
+    }
+)
 async def register(user_data: UserRegister, request: Request):
-    """Register a new user."""
+    """
+    Register a new user account.
+    
+    - **email**: Valid email address
+    - **password**: User password (will be hashed)
+    - **name**: User's full name
+    
+    Returns the created user object (without password).
+    """
     try:
         # Check if user already exists
         existing_user = await db.users.find_one({"email": user_data.email}, {"_id": 0})
