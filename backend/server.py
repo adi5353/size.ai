@@ -200,40 +200,52 @@ async def log_user_activity(
 @api_router.post("/auth/register", response_model=User, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserRegister, request: Request):
     """Register a new user."""
-    # Check if user already exists
-    existing_user = await db.users.find_one({"email": user_data.email}, {"_id": 0})
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+    try:
+        # Check if user already exists
+        existing_user = await db.users.find_one({"email": user_data.email}, {"_id": 0})
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        
+        # Create new user
+        user = UserInDB(
+            email=user_data.email,
+            name=user_data.name,
+            hashed_password=get_password_hash(user_data.password),
+            role="user"  # Default role
         )
-    
-    # Create new user
-    user = UserInDB(
-        email=user_data.email,
-        name=user_data.name,
-        hashed_password=get_password_hash(user_data.password),
-        role="user"  # Default role
-    )
-    
-    # Save to database
-    doc = prepare_for_mongo(user.model_dump())
-    await db.users.insert_one(doc)
-    
-    # Log registration activity
-    client_ip = request.client.host if request.client else None
-    user_agent = request.headers.get("user-agent", None)
-    await log_user_activity(
-        user_id=user.id,
-        user_email=user.email,
-        user_name=user.name,
-        activity_type="register",
-        ip_address=client_ip,
-        user_agent=user_agent
-    )
-    
-    # Return user without password
-    return User(**user.model_dump())
+        
+        # Save to database
+        doc = prepare_for_mongo(user.model_dump())
+        await db.users.insert_one(doc)
+        
+        # Log registration activity
+        client_ip = request.client.host if request.client else None
+        user_agent = request.headers.get("user-agent", None)
+        await log_user_activity(
+            user_id=user.id,
+            user_email=user.email,
+            user_name=user.name,
+            activity_type="register",
+            ip_address=client_ip,
+            user_agent=user_agent
+        )
+        
+        logger.info(f"New user registered: {user.email}")
+        
+        # Return user without password
+        return User(**user.model_dump())
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during user registration: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to register user"
+        )
 
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin, request: Request):
