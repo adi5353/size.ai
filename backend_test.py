@@ -578,7 +578,7 @@ class BackendTester:
         self.log("Testing Admin Stats Endpoint (GET /api/admin/stats)")
         
         # Create admin user and get token
-        admin_token = self.create_admin_user()
+        admin_token = self.get_admin_token()
         if not admin_token:
             self.log("❌ Could not create admin user", "ERROR")
             return False
@@ -628,7 +628,7 @@ class BackendTester:
         self.log("Testing Admin Chart Endpoints (Optimized Aggregation)")
         
         # Create admin user and get token
-        admin_token = self.create_admin_user()
+        admin_token = self.get_admin_token()
         if not admin_token:
             self.log("❌ Could not create admin user", "ERROR")
             return False
