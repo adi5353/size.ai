@@ -125,9 +125,9 @@ Each endpoint now includes:
 - `POST /api/reports/log` - Log report generation
 
 **Access URLs:**
-- Swagger UI: https://secsize-tool.preview.emergentagent.com/api/docs
-- ReDoc: https://secsize-tool.preview.emergentagent.com/api/redoc
-- OpenAPI JSON: https://secsize-tool.preview.emergentagent.com/api/openapi.json
+- Swagger UI: https://infrasizingai.preview.emergentagent.com/api/docs
+- ReDoc: https://infrasizingai.preview.emergentagent.com/api/redoc
+- OpenAPI JSON: https://infrasizingai.preview.emergentagent.com/api/openapi.json
 
 **Files Modified:**
 - `/app/backend/server.py`
@@ -254,7 +254,7 @@ Charts using Recharts:
 
 ## 🔗 References
 
-- Swagger UI: https://secsize-tool.preview.emergentagent.com/api/docs
-- ReDoc: https://secsize-tool.preview.emergentagent.com/api/redoc
+- Swagger UI: https://infrasizingai.preview.emergentagent.com/api/docs
+- ReDoc: https://infrasizingai.preview.emergentagent.com/api/redoc
 - Recharts Documentation: https://recharts.org/
 - Radix UI Tooltips: https://www.radix-ui.com/docs/primitives/components/tooltip
