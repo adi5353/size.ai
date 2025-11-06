@@ -28,12 +28,22 @@ A modern, professional web application for calculating Security Information and 
   - Infrastructure component sizing (CPU, RAM, Storage)
 
 ### 🎯 Advanced Features
+- **Real-World Deployment Scenarios** ⭐ NEW: One-click templates for common SIEM deployments
+  - 🏢 Fortune 500 Enterprise (20,840 devices)
+  - ☁️ MSP/Cloud Provider (18,000 devices)
+  - 🚀 Cloud-Native Startup (2,609 devices)
+  - 🏦 Regulated Finance - PCI-DSS (7,010 devices)
+  - 🏥 Healthcare - HIPAA (4,920 devices)
+  - 🏭 Manufacturing & IoT (2,805 devices)
 - **Growth Projections**: 3-year infrastructure forecast with customizable growth rates
 - **Cost Estimation**: Detailed breakdown of hardware, storage, and network costs
 - **Compliance Templates**: Pre-configured settings for PCI-DSS, HIPAA, GDPR, and SOC 2
 - **High Availability Setup**: HA recommendations with RTO/RPO metrics
 - **Architecture Recommendations**: Intelligent deployment topology suggestions
 - **Hot/Cold Storage Split**: Optimize costs with storage tiering
+- **Multi-Language Support**: Interface available in English, Spanish, French, and German
+- **Configuration Import/Export**: Save and share configurations as JSON
+- **Progressive Web App**: Install on desktop with offline capabilities
 
 ### 🤖 AI Integration
 - **AI Assistant**: Natural language query interface for sizing insights
