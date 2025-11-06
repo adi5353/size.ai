@@ -213,19 +213,19 @@ const CostComparisonPage = () => {
               <div className="bg-slate-800/50 rounded-lg p-4">
                 <div className="text-xs text-slate-400 mb-1">Daily Data</div>
                 <div className="text-2xl font-bold text-blue-400">
-                  {sampleData.results.dataVolume.dailyGB} GB
+                  {safeData.results.dataVolume.dailyGB} GB
                 </div>
               </div>
               <div className="bg-slate-800/50 rounded-lg p-4">
                 <div className="text-xs text-slate-400 mb-1">Peak EPS</div>
                 <div className="text-2xl font-bold text-cyan-400">
-                  {sampleData.results.eventProcessing.peakEPS.toLocaleString()}
+                  {safeData.results.eventProcessing.peakEPS.toLocaleString()}
                 </div>
               </div>
               <div className="bg-slate-800/50 rounded-lg p-4">
                 <div className="text-xs text-slate-400 mb-1">Retention</div>
                 <div className="text-2xl font-bold text-green-400">
-                  {sampleData.configuration.retentionPeriod} days
+                  {safeData.configuration.retentionPeriod} days
                 </div>
               </div>
             </div>
