@@ -851,13 +851,44 @@ async def log_report_generation(
 
 # ============= EXISTING ROUTES =============
 
-@api_router.get("/")
+@api_router.get(
+    "/",
+    summary="API Root",
+    description="Welcome endpoint for the size.ai API",
+    response_description="API information",
+    tags=["Health"]
+)
 async def root():
+    """Get API information and welcome message."""
     return {"message": "size.ai API - SIEM/XDR Infrastructure Sizing Calculator"}
 
-@api_router.get("/health")
+@api_router.get(
+    "/health",
+    summary="Health Check",
+    description="Check the health status of the API and database connection",
+    response_description="Health status information",
+    tags=["Health"],
+    responses={
+        200: {
+            "description": "Service is healthy",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": "healthy",
+                        "database": "connected",
+                        "version": "1.0.0"
+                    }
+                }
+            }
+        }
+    }
+)
 async def health_check():
-    """Health check endpoint for monitoring."""
+    """
+    Health check endpoint for monitoring and load balancers.
+    
+    Returns the current status of the API and database connection.
+    """
     db_healthy = await db_manager.health_check()
     
     return {
