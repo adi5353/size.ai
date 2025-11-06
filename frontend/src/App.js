@@ -45,6 +45,14 @@ function App() {
               } 
             />
             <Route 
+              path="/cost-comparison" 
+              element={
+                <ProtectedRoute>
+                  <CostComparisonPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/calculator" 
               element={
                 <ProtectedRoute>
