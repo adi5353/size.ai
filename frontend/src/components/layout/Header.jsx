@@ -85,7 +85,19 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
                       className="text-muted-foreground hover:text-foreground"
                     >
                       <Bot className="w-4 h-4 mr-2" />
-                      AI Assistant 🤖
+                      AI Assistant
+                    </Button>
+                  )}
+
+                  {!isCostComparisonPage && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => navigate('/cost-comparison')}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <DollarSign className="w-4 h-4 mr-2" />
+                      Cost Comparison
                     </Button>
                   )}
 
