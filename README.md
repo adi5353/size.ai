@@ -423,15 +423,32 @@ The core calculation logic is handled client-side in `src/utils/calculations.js`
 
 ## 🗺️ Roadmap
 
-### Planned Features
+### ✅ Completed (TIER 1-5)
+- [x] **Core Calculator**: Device inventory and real-time calculations
+- [x] **User Authentication**: Secure login/registration with JWT
+- [x] **Saved Configurations**: Store unlimited configurations per user
+- [x] **Admin Dashboard**: User activity monitoring and analytics
+- [x] **AI Assistant**: Natural language SIEM sizing queries
+- [x] **Database Optimization**: Connection pooling, indexing, aggregation pipelines
+- [x] **API Documentation**: OpenAPI/Swagger UI at `/api/docs`
+- [x] **Multi-Language Support**: English, Spanish, French, German (i18n)
+- [x] **Config Import/Export**: JSON-based configuration management
+- [x] **Cost Comparison**: Multi-vendor pricing analysis
+- [x] **PWA Features**: Offline support and desktop installation
+- [x] **Docker Infrastructure**: Production-ready containerization
+- [x] **Real-World Scenarios**: 6 pre-built SIEM deployment templates
+
+### 🔜 Planned Features (TIER 6+)
 - [ ] **Enhanced Visualizations**: Charts for data volume trends and device distribution
-- [ ] **Multiple Saved Profiles**: Save and manage multiple configurations
-- [ ] **Comparison Mode**: Compare different sizing scenarios side-by-side
+- [ ] **Scenario Comparison**: Side-by-side comparison of multiple scenarios
+- [ ] **Custom Scenario Builder**: Save your own scenario templates
 - [ ] **Email Reports**: Send reports directly via email
-- [ ] **Advanced Help System**: Tooltips and documentation modals
-- [ ] **Input Validation**: Warnings for unrealistic values
-- [ ] **JSON Import/Export**: Import configurations from JSON files
-- [ ] **Cost Calculator Enhancements**: More detailed pricing models
+- [ ] **Advanced Help System**: Interactive tooltips and documentation
+- [ ] **Input Validation**: Smart warnings for unrealistic values
+- [ ] **Cost Trend Analysis**: Historical cost tracking and forecasting
+- [ ] **Team Collaboration**: Share configurations with team members
+- [ ] **API Access**: Programmatic access to calculator engine
+- [ ] **More Industry Scenarios**: Retail, Education, Government templates
 
 ---
 
