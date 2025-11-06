@@ -1,0 +1,209 @@
+{
+  "common": {
+    "appName": "size.ai",
+    "appTagline": "AI-Powered SIEM & XDR Infrastructure Sizing",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "reset": "Reset"
+  },
+  
+  "nav": {
+    "home": "Home",
+    "calculator": "Calculator",
+    "dashboard": "Dashboard",
+    "aiAssistant": "AI Assistant",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "loginRegister": "Login / Register"
+  },
+  
+  "home": {
+    "hero": {
+      "title": "AI-Powered SIEM & XDR Sizing",
+      "subtitle": "Plan your security infrastructure with confidence. Calculate hardware, storage, and costs for your SIEM/XDR deployment with professional accuracy.",
+      "cta": "Get Started Free",
+      "learnMore": "Learn More",
+      "noCreditCard": "No Credit Card Required",
+      "freeForever": "Free Forever",
+      "instantAccess": "Instant Access"
+    }
+  },
+  
+  "calculator": {
+    "title": "Infrastructure Sizing Calculator",
+    "deviceInventory": "Device Inventory",
+    "configuration": "Configuration",
+    "results": "Results",
+    "saveConfiguration": "Save to Account",
+    "loadConfiguration": "Load Configuration",
+    "exportPDF": "Export PDF Report",
+    "resetCalculator": "Reset Calculator",
+    
+    "devices": {
+      "title": "Device Inventory",
+      "description": "Enter the number of devices and their average EPS (Events Per Second)",
+      "quantity": "Quantity",
+      "eps": "Events/Sec (EPS)",
+      "categories": {
+        "endpoints": "Endpoints & Servers",
+        "network": "Network Devices",
+        "security": "Security Devices",
+        "cloud": "Cloud & Applications"
+      },
+      "types": {
+        "workstations": "Workstations",
+        "servers": "Servers",
+        "mobileDevices": "Mobile Devices",
+        "virtualMachines": "Virtual Machines",
+        "routers": "Routers/Switches",
+        "firewalls": "Firewalls",
+        "loadBalancers": "Load Balancers",
+        "wirelessAP": "Wireless APs",
+        "ids": "IDS/IPS",
+        "proxies": "Proxies",
+        "dlp": "DLP Systems",
+        "emailGateway": "Email Gateways",
+        "cloudApps": "Cloud Applications",
+        "containers": "Containers",
+        "apiGateways": "API Gateways",
+        "databases": "Databases"
+      }
+    },
+    
+    "config": {
+      "title": "Configuration Settings",
+      "compliance": "Compliance Standard",
+      "complianceSelect": "Select Compliance Template",
+      "retention": "Log Retention",
+      "retentionDays": "{{days}} days",
+      "hotStorage": "Hot Storage",
+      "hotStorageDays": "{{days}} days",
+      "coldStorage": "Cold Storage Duration",
+      "coldStorageDays": "{{days}} days",
+      "compression": "Compression Ratio",
+      "compressionRatio": "{{ratio}}:1",
+      "replication": "Replication Factor",
+      "replicationFactor": "{{factor}}x",
+      "growth": "Enable Growth Projections",
+      "growthRate": "Annual Growth Rate",
+      "peakFactor": "Peak Traffic Multiplier",
+      "highAvailability": "High Availability",
+      "encryption": "Data Encryption"
+    },
+    
+    "results": {
+      "title": "Sizing Results",
+      "eventProcessing": "Event Processing",
+      "averageEPS": "Average EPS",
+      "peakEPS": "Peak EPS",
+      "dailyEvents": "Daily Events",
+      "dataVolume": "Data Volume",
+      "dailyGB": "Daily Data (GB)",
+      "monthlyTB": "Monthly Data (TB)",
+      "annualTB": "Annual Data (TB)",
+      "storage": "Storage Requirements",
+      "hotStorageTB": "Hot Storage (TB)",
+      "coldStorageTB": "Cold Storage (TB)",
+      "totalStorageTB": "Total Storage (TB)",
+      "withReplication": "With Replication (TB)",
+      "infrastructure": "Infrastructure Sizing",
+      "servers": "Index Servers Required",
+      "searchHeads": "Search Heads Required",
+      "bandwidth": "Network Bandwidth (Gbps)",
+      "costEstimation": "Cost Estimation",
+      "monthlyUSD": "Monthly (USD)",
+      "annualUSD": "Annual (USD)",
+      "hardware": "Hardware/Compute",
+      "storage": "Storage",
+      "network": "Network/Bandwidth",
+      "total": "Total",
+      "growthProjections": "Growth Projections",
+      "year": "Year {{year}}",
+      "devices": "{{count}} devices",
+      "eps": "{{count}} EPS",
+      "growth": "+{{percent}}%"
+    },
+    
+    "warnings": {
+      "storageExcessive": "Storage exceeds typical 5PB data center capacity",
+      "growthHigh": "Annual growth rate unusually high - verify assumptions",
+      "retentionPCI": "PCI-DSS typically requires 90+ day retention",
+      "retentionHIPAA": "HIPAA requires 365-day retention minimum",
+      "epsHigh": "Peak EPS exceeds single server capacity (100k EPS) - Consider distributed architecture",
+      "complianceWarning": "Compliance Warning",
+      "configurationIssue": "Configuration Issue"
+    }
+  },
+  
+  "auth": {
+    "welcomeTitle": "Welcome to {{appName}}",
+    "welcomeSubtitle": "Login or create an account to save your configurations",
+    "loginTab": "Login",
+    "registerTab": "Register",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "forgotPassword": "Forgot Password?",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Registration successful! Welcome aboard!",
+    "loginFailed": "Login failed",
+    "registerFailed": "Registration failed",
+    "logoutSuccess": "Logged out successfully"
+  },
+  
+  "dashboard": {
+    "title": "My Dashboard",
+    "savedConfigurations": "Saved Configurations",
+    "recentActivity": "Recent Activity",
+    "noConfigurations": "No saved configurations yet",
+    "activityTypes": {
+      "register": "Account Created",
+      "login": "Logged In"
+    }
+  },
+  
+  "compliance": {
+    "GDPR": "GDPR (EU Data Protection)",
+    "CCPA": "CCPA (California Privacy)",
+    "PIPEDA": "PIPEDA (Canada Privacy)",
+    "HIPAA": "HIPAA (US Healthcare)",
+    "PCI_DSS": "PCI-DSS (Payment Cards)",
+    "SOC2": "SOC 2 (Cloud Services)",
+    "NONE": "Custom / No Specific Compliance"
+  },
+  
+  "export": {
+    "pdf": {
+      "title": "SIEM Infrastructure Sizing Report",
+      "generatedOn": "Generated on {{date}}",
+      "executiveSummary": "Executive Summary",
+      "deviceInventory": "Device Inventory",
+      "configuration": "Configuration Parameters",
+      "results": "Sizing Results",
+      "recommendations": "Recommendations"
+    }
+  },
+  
+  "errors": {
+    "invalidEmail": "Invalid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "requiredField": "This field is required",
+    "networkError": "Network error. Please try again.",
+    "serverError": "Server error. Please try again later."
+  }
+}
