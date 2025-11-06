@@ -692,6 +692,17 @@ async def log_report_generation(
 async def root():
     return {"message": "size.ai API - SIEM/XDR Infrastructure Sizing Calculator"}
 
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint for monitoring."""
+    db_healthy = await db_manager.health_check()
+    
+    return {
+        "status": "healthy" if db_healthy else "unhealthy",
+        "database": "connected" if db_healthy else "disconnected",
+        "version": "1.0.0"
+    }
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.model_dump()
