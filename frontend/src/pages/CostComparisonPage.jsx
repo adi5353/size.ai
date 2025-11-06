@@ -10,51 +10,58 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 const CostComparisonPage = () => {
   const navigate = useNavigate();
   
+  // Get default sample data
+  const getDefaultSampleData = () => ({
+    results: {
+      eventProcessing: {
+        averageEPS: 5000,
+        peakEPS: 15000,
+        dailyEvents: 432000000,
+      },
+      dataVolume: {
+        dailyGB: 100,
+        monthlyTB: 3,
+        annualTB: 36,
+      },
+      storage: {
+        hotStorageTB: 10,
+        coldStorageTB: 26,
+        totalStorageTB: 36,
+        withReplicationTB: 72,
+      },
+    },
+    devices: {
+      workstations: { quantity: 500, eps: 2 },
+      servers: { quantity: 50, eps: 10 },
+      firewalls: { quantity: 10, eps: 500 },
+      ids: { quantity: 5, eps: 1000 },
+    },
+    configuration: {
+      retentionPeriod: 90,
+      complianceTemplate: 'HIPAA',
+      includeGrowth: true,
+      annualGrowth: 20,
+    },
+  });
+
   // Sample data - in real use, this would come from calculator state or localStorage
   const [sampleData] = useState(() => {
     // Try to get data from localStorage (from calculator)
     const savedConfig = localStorage.getItem('lastCalculatorConfig');
     if (savedConfig) {
       try {
-        return JSON.parse(savedConfig);
+        const parsed = JSON.parse(savedConfig);
+        // Validate the data structure
+        if (parsed && parsed.results && parsed.devices && parsed.configuration) {
+          return parsed;
+        }
       } catch (e) {
         console.error('Error parsing saved config:', e);
       }
     }
     
-    // Default sample data
-    return {
-      results: {
-        eventProcessing: {
-          averageEPS: 5000,
-          peakEPS: 15000,
-          dailyEvents: 432000000,
-        },
-        dataVolume: {
-          dailyGB: 100,
-          monthlyTB: 3,
-          annualTB: 36,
-        },
-        storage: {
-          hotStorageTB: 10,
-          coldStorageTB: 26,
-          totalStorageTB: 36,
-          withReplicationTB: 72,
-        },
-      },
-      devices: {
-        workstations: { quantity: 500, eps: 2 },
-        servers: { quantity: 50, eps: 10 },
-        firewalls: { quantity: 10, eps: 500 },
-        ids: { quantity: 5, eps: 1000 },
-      },
-      configuration: {
-        retentionPeriod: 90,
-        complianceTemplate: 'HIPAA',
-        includeGrowth: true,
-        annualGrowth: 20,
-      },
-    };
+    // Return default sample data
+    return getDefaultSampleData();
   });
 
   const totalDevices = useMemo(() => {
