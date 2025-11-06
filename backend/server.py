@@ -1008,12 +1008,38 @@ async def get_chat_history(
 
 # ============= REPORT GENERATION TRACKING =============
 
-@api_router.post("/reports/log")
+@api_router.post(
+    "/reports/log",
+    summary="Log Report Generation",
+    description="Track PDF report generation activity",
+    tags=["Reports"],
+    responses={
+        200: {
+            "description": "Report generation logged successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": "logged",
+                        "report_id": "report-uuid"
+                    }
+                }
+            }
+        },
+        401: {"description": "Authentication required"},
+        404: {"description": "User not found"}
+    }
+)
 async def log_report_generation(
     report_type: str,
     current_user: TokenData = Depends(get_current_user)
 ):
-    """Log report generation activity."""
+    """
+    Log PDF report generation activity.
+    
+    - **report_type**: Type of report generated (e.g., "sizing_report", "cost_analysis")
+    
+    This endpoint tracks when users generate PDF reports for analytics.
+    """
     # Get user details
     user_doc = await db.users.find_one({"id": current_user.user_id}, {"_id": 0})
     if not user_doc:
