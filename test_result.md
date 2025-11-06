@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Fix Response body clone error + Implement TIER 2 IMPORTANT IMPROVEMENTS: API Documentation (OpenAPI/Swagger), Real-Time Validation, Advanced Visualizations, and Caching Strategy"
+user_problem_statement: "TIER 5 Implementation: Real-World SIEM Deployment Scenarios - Pre-built templates for common use cases (Fortune 500, MSP/Cloud, Startups, Healthcare, Finance, Manufacturing)"
 
 frontend:
   - task: "Authentication Flow and Protected Routes"
