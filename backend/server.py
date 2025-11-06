@@ -293,9 +293,37 @@ async def register(user_data: UserRegister, request: Request):
             detail="Failed to register user"
         )
 
-@api_router.post("/auth/login", response_model=Token)
+@api_router.post(
+    "/auth/login",
+    response_model=Token,
+    summary="User Login",
+    description="Authenticate user and receive JWT token",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "Successfully authenticated",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "token_type": "bearer"
+                    }
+                }
+            }
+        },
+        401: {"description": "Invalid credentials"}
+    }
+)
 async def login(credentials: UserLogin, request: Request):
-    """Login user and return JWT token."""
+    """
+    Authenticate user and return JWT access token.
+    
+    - **email**: User's registered email
+    - **password**: User's password
+    
+    Returns a JWT token that expires in 7 days.
+    Use this token in the Authorization header: `Bearer <token>`
+    """
     try:
         # Find user
         user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
