@@ -13,6 +13,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { LanguageSelector } from '@/components/layout/LanguageSelector';
 
 export const Header = ({ onSaveConfig, onLoadConfigs }) => {
   const { user, isAuthenticated, logout } = useAuth();
