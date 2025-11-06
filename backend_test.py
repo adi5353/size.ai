@@ -770,10 +770,12 @@ class BackendTester:
         """Run all backend tests in sequence"""
         self.log("=" * 60)
         self.log("STARTING BACKEND API TESTS FOR SIZE.AI")
+        self.log("DATABASE OPTIMIZATION & IMPROVEMENTS VERIFICATION")
         self.log(f"Backend URL: {BACKEND_URL}")
         self.log("=" * 60)
         
         tests = [
+            # Core Authentication Tests (Verify Still Working)
             ("User Registration", self.test_user_registration),
             ("Duplicate Registration", self.test_duplicate_registration),
             ("User Login", self.test_user_login),
@@ -781,6 +783,8 @@ class BackendTester:
             ("Non-existent User Login", self.test_nonexistent_user_login),
             ("Get Current User", self.test_get_current_user),
             ("Invalid Token Access", self.test_invalid_token_access),
+            
+            # Configuration Management Tests (With New Indexes)
             ("Save Configuration", self.test_save_configuration),
             ("Save Multiple Configurations", self.test_save_multiple_configurations),
             ("Get User Configurations", self.test_get_user_configurations),
@@ -788,6 +792,13 @@ class BackendTester:
             ("Load Non-existent Configuration", self.test_load_nonexistent_configuration),
             ("Delete Configuration", self.test_delete_configuration),
             ("Verify Deletion", self.test_verify_deletion),
+            
+            # NEW DATABASE OPTIMIZATION TESTS
+            ("Health Check Endpoint", self.test_health_check_endpoint),
+            ("User Activity Logging", self.test_user_activity_logging),
+            ("Admin Stats Endpoint", self.test_admin_stats_endpoint),
+            ("Admin Chart Endpoints", self.test_admin_chart_endpoints),
+            ("AI Chat Error Handling", self.test_ai_chat_error_handling),
         ]
         
         results = {}
