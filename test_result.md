@@ -420,15 +420,18 @@ backend:
 
   - task: "TTL Indexes for Data Cleanup"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/database.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "✅ IMPLEMENTED: Added TTL indexes for automatic old data cleanup: user_activities (365 days), report_logs (365 days), chat_messages (90 days). MongoDB will automatically remove old documents based on these policies."
+        - working: true
+          agent: "testing"
+          comment: "✅ VERIFIED: TTL indexes are properly configured and active. Database operations are functioning normally with automatic cleanup policies in place. User activities and chat messages are being stored correctly and will be automatically cleaned up according to the configured retention periods."
 
   - task: "MongoDB Schema Validation"
     implemented: true
