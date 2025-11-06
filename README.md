@@ -154,7 +154,17 @@ MONGO_URL=mongodb://localhost:27017/sizeai
 
 ## 🎮 Usage
 
-### Basic Workflow
+### Quick Start with Scenarios ⭐ NEW
+
+1. **Load a Pre-Built Scenario**
+   - Click "Load Scenario" button in the calculator
+   - Browse 6 industry-standard templates (Fortune 500, MSP, Startup, Finance, Healthcare, Manufacturing)
+   - Filter by category or view all scenarios
+   - Select a scenario to see architecture details, costs, and risks
+   - Click "Apply Scenario" to instantly populate the calculator
+   - Customize the pre-filled values as needed
+
+### Manual Configuration Workflow
 
 1. **Configure Device Inventory**
    - Expand device categories (Endpoints, Servers, Network, Security, Cloud)
