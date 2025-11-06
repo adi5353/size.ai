@@ -12,7 +12,7 @@ import sys
 import os
 
 # Backend URL from environment
-BACKEND_URL = "https://sizeai-calc.preview.emergentagent.com"
+BACKEND_URL = "https://secsize-tool.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 class BackendTester:
