@@ -444,9 +444,37 @@ async def get_user_activity(
     
     return [UserActivity(**parse_from_mongo(activity)) for activity in activities]
 
-@api_router.get("/admin/stats")
+@api_router.get(
+    "/admin/stats",
+    summary="Admin Statistics",
+    description="Get platform statistics and metrics",
+    tags=["Admin"],
+    responses={
+        200: {
+            "description": "Statistics retrieved successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "total_users": 150,
+                        "recent_users_7d": 25,
+                        "total_logins": 500,
+                        "total_registrations": 150,
+                        "recent_activity_24h": 75
+                    }
+                }
+            }
+        },
+        401: {"description": "Authentication required"},
+        403: {"description": "Admin access required"}
+    }
+)
 async def get_admin_stats(current_admin: TokenData = Depends(get_current_admin)):
-    """Get dashboard statistics (admin only)."""
+    """
+    Get platform statistics and metrics (admin only).
+    
+    Returns user counts, activity metrics, and trends.
+    Requires admin role.
+    """
     try:
         # Total users
         total_users = await db.users.count_documents({})
