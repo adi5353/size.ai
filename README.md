@@ -52,8 +52,9 @@ A modern, professional web application for calculating Security Information and 
 
 ### 📄 Export & Reporting
 - **PDF Report Generation**: Professional, detailed infrastructure reports
-- **Configuration Export**: Save and share configurations as text files
+- **Configuration Import/Export**: Save and share configurations as JSON
 - **Download Functionality**: Export results for offline analysis
+- **Saved Configurations**: Store unlimited configurations in your account
 
 ### 🎨 Modern UI/UX
 - **Glassmorphism Design**: Beautiful, modern interface with blur effects
