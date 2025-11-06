@@ -290,6 +290,118 @@ export const Calculator = () => {
     results,
   });
 
+  // Handle scenario application
+  const handleApplyScenario = (scenario) => {
+    // Map scenario devices to calculator device structure
+    const mappedDevices = {
+      // Endpoints - distribute workstations
+      windowsWorkstations: { 
+        quantity: Math.floor(scenario.devices.workstations?.quantity * 0.6 || 0), 
+        eps: scenario.devices.workstations?.eps || 3 
+      },
+      linuxWorkstations: { 
+        quantity: Math.floor(scenario.devices.workstations?.quantity * 0.25 || 0), 
+        eps: scenario.devices.workstations?.eps || 2 
+      },
+      macWorkstations: { 
+        quantity: Math.floor(scenario.devices.workstations?.quantity * 0.15 || 0), 
+        eps: scenario.devices.workstations?.eps || 2 
+      },
+      
+      // Servers - distribute server types
+      windowsServers: { 
+        quantity: Math.floor(scenario.devices.servers?.quantity * 0.4 || 0), 
+        eps: scenario.devices.servers?.eps || 20 
+      },
+      linuxServers: { 
+        quantity: Math.floor(scenario.devices.servers?.quantity * 0.35 || 0), 
+        eps: scenario.devices.servers?.eps || 15 
+      },
+      databaseServers: { 
+        quantity: Math.floor(scenario.devices.databases?.quantity || scenario.devices.servers?.quantity * 0.15 || 0), 
+        eps: scenario.devices.databases?.eps || 30 
+      },
+      applicationServers: { 
+        quantity: Math.floor(scenario.devices.servers?.quantity * 0.1 || 0), 
+        eps: 25 
+      },
+      
+      // Network Devices
+      firewalls: { 
+        quantity: scenario.devices.firewalls?.quantity || 0, 
+        eps: scenario.devices.firewalls?.eps || 200 
+      },
+      switches: { 
+        quantity: Math.floor(scenario.devices.routers?.quantity * 0.5 || 0), 
+        eps: 50 
+      },
+      routers: { 
+        quantity: scenario.devices.routers?.quantity || 0, 
+        eps: scenario.devices.routers?.eps || 300 
+      },
+      loadBalancers: { 
+        quantity: scenario.devices.loadBalancers?.quantity || 0, 
+        eps: scenario.devices.loadBalancers?.eps || 150 
+      },
+      idsIps: { 
+        quantity: scenario.devices.ids?.quantity || 0, 
+        eps: scenario.devices.ids?.eps || 500 
+      },
+      
+      // Cloud Resources - distribute cloud apps
+      awsResources: { 
+        quantity: Math.floor(scenario.devices.cloudApps?.quantity * 0.4 || 0), 
+        eps: scenario.devices.cloudApps?.eps || 10 
+      },
+      azureResources: { 
+        quantity: Math.floor(scenario.devices.cloudApps?.quantity * 0.3 || 0), 
+        eps: scenario.devices.cloudApps?.eps || 10 
+      },
+      gcpResources: { 
+        quantity: Math.floor(scenario.devices.cloudApps?.quantity * 0.2 || 0), 
+        eps: scenario.devices.cloudApps?.eps || 10 
+      },
+      otherCloud: { 
+        quantity: Math.floor(scenario.devices.cloudApps?.quantity * 0.1 || 0), 
+        eps: scenario.devices.cloudApps?.eps || 10 
+      },
+      
+      // Security Devices
+      siemAgents: { 
+        quantity: Math.floor(scenario.devices.containers?.quantity * 0.1 || 0), 
+        eps: 5 
+      },
+      edrAgents: { 
+        quantity: Math.floor((scenario.devices.workstations?.quantity || 0) * 0.2), 
+        eps: 15 
+      },
+      webAppFirewalls: { 
+        quantity: scenario.devices.proxies?.quantity || 0, 
+        eps: scenario.devices.proxies?.eps || 100 
+      },
+    };
+
+    // Map scenario configuration
+    const mappedConfiguration = {
+      retentionPeriod: scenario.configuration.retentionPeriod || 90,
+      complianceTemplate: scenario.configuration.complianceTemplate?.toLowerCase().replace('_', '-') || 'custom',
+      includeGrowth: scenario.configuration.includeGrowth || false,
+      annualGrowth: scenario.configuration.annualGrowth || 20,
+      replicationFactor: scenario.configuration.replicationFactor || 2,
+      compressionLevel: scenario.configuration.compressionLevel || 'standard',
+      hotColdSplit: scenario.configuration.hotColdSplit || false,
+      hotStorageDays: scenario.configuration.hotStorageDays || 30,
+    };
+
+    // Apply to state
+    setDevices(mappedDevices);
+    setConfiguration(mappedConfiguration);
+    
+    toast.success(`Applied: ${scenario.name}`, {
+      description: `Loaded ${Object.values(mappedDevices).reduce((sum, d) => sum + d.quantity, 0).toLocaleString()} devices`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background grid-bg">
       <Header onSaveConfig={handleSaveConfig} onLoadConfigs={handleLoadConfigs} />
