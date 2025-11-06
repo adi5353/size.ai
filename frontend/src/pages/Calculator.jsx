@@ -69,6 +69,7 @@ export const Calculator = () => {
   });
 
   const [importExportModalOpen, setImportExportModalOpen] = useState(false);
+  const [scenarioSelectorOpen, setScenarioSelectorOpen] = useState(false);
 
   // Save/Load configuration state
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
