@@ -36,8 +36,9 @@ app = FastAPI(
     title="size.ai API",
     version="1.0.0",
     description="SIEM & XDR Infrastructure Sizing Calculator API - AI-powered infrastructure planning and cost estimation",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
     openapi_tags=[
         {"name": "Authentication", "description": "User authentication and authorization"},
         {"name": "Configurations", "description": "Save and manage sizing configurations"},
