@@ -604,16 +604,26 @@ async def create_configuration(
     current_user: TokenData = Depends(get_current_user)
 ):
     """Save a new configuration for the authenticated user."""
-    config = SavedConfiguration(
-        user_id=current_user.user_id,
-        **config_data.model_dump()
-    )
-    
-    # Save to database
-    doc = prepare_for_mongo(config.model_dump())
-    await db.configurations.insert_one(doc)
-    
-    return config
+    try:
+        config = SavedConfiguration(
+            user_id=current_user.user_id,
+            **config_data.model_dump()
+        )
+        
+        # Save to database
+        doc = prepare_for_mongo(config.model_dump())
+        await db.configurations.insert_one(doc)
+        
+        logger.info(f"Configuration created: {config.id} by user {current_user.user_id}")
+        
+        return config
+        
+    except Exception as e:
+        logger.error(f"Error creating configuration: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to save configuration"
+        )
 
 @api_router.get("/configurations", response_model=List[SavedConfiguration])
 async def get_user_configurations(current_user: TokenData = Depends(get_current_user)):
