@@ -301,13 +301,28 @@ export const Calculator = () => {
       <main className="relative container mx-auto px-4 py-8 max-w-7xl">
         {/* Introduction */}
         <motion.div 
-          className="mb-8 text-center"
+          className="mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-heading font-bold text-foreground mb-2">Professional Security Infrastructure Calculator</h2>
-          <p className="text-muted-foreground text-lg">Plan your SIEM/XDR deployment with confidence • Calculate hardware, storage, and costs</p>
+          <div className="text-center mb-4">
+            <h2 className="text-3xl font-heading font-bold text-foreground mb-2">Professional Security Infrastructure Calculator</h2>
+            <p className="text-muted-foreground text-lg">Plan your SIEM/XDR deployment with confidence • Calculate hardware, storage, and costs</p>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setImportExportModalOpen(true)}
+              className="glass-card border-white/10 hover:border-purple-500/50"
+            >
+              <FileDown className="w-4 h-4 mr-2" />
+              Import / Export
+            </Button>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
