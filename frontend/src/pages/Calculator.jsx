@@ -6,6 +6,7 @@ import ConfigurationPanel from '@/components/calculator/ConfigurationPanel';
 import ResultsDashboard from '@/components/calculator/ResultsDashboard';
 import AIAssistant from '@/components/calculator/AIAssistant';
 import { ImportExportModal } from '@/components/calculator/ImportExportModal';
+import { ScenarioSelector } from '@/components/calculator/ScenarioSelector';
 import { calculateInfrastructure } from '@/utils/calculations';
 import { saveToHistory } from '@/utils/importExport';
 import { motion } from 'framer-motion';
@@ -22,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Trash2, FileDown, FileUp } from 'lucide-react';
+import { Loader2, Trash2, FileDown, FileUp, BookOpen } from 'lucide-react';
 
 export const Calculator = () => {
   const { isAuthenticated, token } = useAuth();
