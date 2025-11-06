@@ -609,6 +609,14 @@ export const Calculator = () => {
         currentConfig={getCurrentConfig()}
         onImport={handleImportConfig}
       />
+
+      {/* Scenario Selector Modal */}
+      {scenarioSelectorOpen && (
+        <ScenarioSelector
+          onSelectScenario={handleApplyScenario}
+          onClose={() => setScenarioSelectorOpen(false)}
+        />
+      )}
     </div>
   );
 };
