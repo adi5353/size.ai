@@ -444,6 +444,15 @@ export const Calculator = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setScenarioSelectorOpen(true)}
+              className="glass-card border-white/10 hover:border-purple-500/50"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Load Scenario
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setImportExportModalOpen(true)}
               className="glass-card border-white/10 hover:border-purple-500/50"
             >
