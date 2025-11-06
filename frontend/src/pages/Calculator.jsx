@@ -67,6 +67,8 @@ export const Calculator = () => {
     hotStorageDays: 30,
   });
 
+  const [importExportModalOpen, setImportExportModalOpen] = useState(false);
+
   // Save/Load configuration state
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [loadDialogOpen, setLoadDialogOpen] = useState(false);
