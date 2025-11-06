@@ -758,9 +758,23 @@ async def create_configuration(
             detail="Failed to save configuration"
         )
 
-@api_router.get("/configurations", response_model=List[SavedConfiguration])
+@api_router.get(
+    "/configurations",
+    response_model=List[SavedConfiguration],
+    summary="List Configurations",
+    description="Get all saved configurations for the authenticated user",
+    tags=["Configurations"],
+    responses={
+        200: {"description": "List of configurations retrieved successfully"},
+        401: {"description": "Authentication required"}
+    }
+)
 async def get_user_configurations(current_user: TokenData = Depends(get_current_user)):
-    """Get all configurations for the authenticated user."""
+    """
+    Retrieve all configurations for the authenticated user.
+    
+    Configurations are sorted by last updated date (most recent first).
+    """
     configs = await db.configurations.find(
         {"user_id": current_user.user_id},
         {"_id": 0}
