@@ -25,6 +25,7 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
   const isHomePage = location.pathname === '/';
   const isDashboardPage = location.pathname === '/dashboard';
   const isAIAssistantPage = location.pathname === '/ai-assistant';
+  const isCostComparisonPage = location.pathname === '/cost-comparison';
 
   return (
     <>
