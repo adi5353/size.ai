@@ -717,21 +717,28 @@ async def chat_with_assistant(
     current_user: TokenData = Depends(get_current_user)
 ):
     """Chat with AI assistant."""
-    from emergentintegrations.llm.chat import LlmChat, UserMessage
-    
-    # Generate or use provided session ID
-    session_id = chat_data.session_id or str(uuid.uuid4())
-    
-    # Get last 10 messages for context
-    previous_messages = await db.chat_messages.find(
-        {"user_id": current_user.user_id, "session_id": session_id},
-        {"_id": 0}
-    ).sort("timestamp", 1).limit(10).to_list(10)
-    
-    # Initialize AI chat
-    api_key = os.environ.get('EMERGENT_LLM_KEY')
-    system_message = """You are an AI Security Assistant for size.ai, a SIEM & XDR infrastructure sizing calculator.
-    
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        
+        # Generate or use provided session ID
+        session_id = chat_data.session_id or str(uuid.uuid4())
+        
+        # Get last 10 messages for context
+        previous_messages = await db.chat_messages.find(
+            {"user_id": current_user.user_id, "session_id": session_id},
+            {"_id": 0}
+        ).sort("timestamp", 1).limit(10).to_list(10)
+        
+        # Initialize AI chat
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="AI service not configured"
+            )
+        
+        system_message = """You are an AI Security Assistant for size.ai, a SIEM & XDR infrastructure sizing calculator.
+        
 Your role is to help users with:
 - Understanding security infrastructure configurations
 - Calculating hardware and storage requirements
@@ -741,36 +748,47 @@ Your role is to help users with:
 - Cost optimization strategies
 
 Be professional, concise, and helpful. Provide actionable insights based on security best practices."""
-    
-    chat = LlmChat(
-        api_key=api_key,
-        session_id=session_id,
-        system_message=system_message
-    ).with_model("openai", "gpt-4o-mini")
-    
-    # Save user message
-    user_msg = ChatMessage(
-        user_id=current_user.user_id,
-        session_id=session_id,
-        role="user",
-        content=chat_data.message
-    )
-    await db.chat_messages.insert_one(prepare_for_mongo(user_msg.model_dump()))
-    
-    # Get AI response
-    user_message = UserMessage(text=chat_data.message)
-    ai_response = await chat.send_message(user_message)
-    
-    # Save assistant message
-    assistant_msg = ChatMessage(
-        user_id=current_user.user_id,
-        session_id=session_id,
-        role="assistant",
-        content=ai_response
-    )
-    await db.chat_messages.insert_one(prepare_for_mongo(assistant_msg.model_dump()))
-    
-    return ChatResponse(message=ai_response, session_id=session_id)
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=session_id,
+            system_message=system_message
+        ).with_model("openai", "gpt-4o-mini")
+        
+        # Save user message
+        user_msg = ChatMessage(
+            user_id=current_user.user_id,
+            session_id=session_id,
+            role="user",
+            content=chat_data.message
+        )
+        await db.chat_messages.insert_one(prepare_for_mongo(user_msg.model_dump()))
+        
+        # Get AI response
+        user_message = UserMessage(text=chat_data.message)
+        ai_response = await chat.send_message(user_message)
+        
+        # Save assistant message
+        assistant_msg = ChatMessage(
+            user_id=current_user.user_id,
+            session_id=session_id,
+            role="assistant",
+            content=ai_response
+        )
+        await db.chat_messages.insert_one(prepare_for_mongo(assistant_msg.model_dump()))
+        
+        logger.info(f"AI chat message processed for user {current_user.user_id}")
+        
+        return ChatResponse(message=ai_response, session_id=session_id)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in AI chat: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to process AI chat request"
+        )
 
 @api_router.get("/ai/history/{session_id}", response_model=List[ChatMessage])
 async def get_chat_history(
