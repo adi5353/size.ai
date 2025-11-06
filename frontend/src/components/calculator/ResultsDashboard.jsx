@@ -750,6 +750,24 @@ ${JSON.stringify(config, null, 2)}
         </Card>
       )}
 
+      {/* Cost Comparison Matrix */}
+      <Card className="p-6 glass-card">
+        <div className="mb-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-purple-500" />
+            Vendor Cost Comparison
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Compare your sizing requirements across leading SIEM vendors
+          </p>
+        </div>
+        <CostComparisonMatrix 
+          results={results}
+          devices={devices}
+          configuration={configuration}
+        />
+      </Card>
+
       {/* Action Buttons */}
       <div className="space-y-3">
         <Button 
