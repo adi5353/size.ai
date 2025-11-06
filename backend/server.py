@@ -358,34 +358,42 @@ async def get_user_activity(
 @api_router.get("/admin/stats")
 async def get_admin_stats(current_admin: TokenData = Depends(get_current_admin)):
     """Get dashboard statistics (admin only)."""
-    # Total users
-    total_users = await db.users.count_documents({})
-    
-    # Users registered in last 7 days
-    seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
-    recent_users = await db.users.count_documents({
-        "created_at": {"$gte": seven_days_ago.isoformat()}
-    })
-    
-    # Total logins
-    total_logins = await db.user_activities.count_documents({"activity_type": "login"})
-    
-    # Total registrations
-    total_registrations = await db.user_activities.count_documents({"activity_type": "register"})
-    
-    # Recent activity (last 24 hours)
-    twenty_four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=24)
-    recent_activity = await db.user_activities.count_documents({
-        "timestamp": {"$gte": twenty_four_hours_ago.isoformat()}
-    })
-    
-    return {
-        "total_users": total_users,
-        "recent_users_7d": recent_users,
-        "total_logins": total_logins,
-        "total_registrations": total_registrations,
-        "recent_activity_24h": recent_activity
-    }
+    try:
+        # Total users
+        total_users = await db.users.count_documents({})
+        
+        # Users registered in last 7 days
+        seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
+        recent_users = await db.users.count_documents({
+            "created_at": {"$gte": seven_days_ago.isoformat()}
+        })
+        
+        # Total logins
+        total_logins = await db.user_activities.count_documents({"activity_type": "login"})
+        
+        # Total registrations
+        total_registrations = await db.user_activities.count_documents({"activity_type": "register"})
+        
+        # Recent activity (last 24 hours)
+        twenty_four_hours_ago = datetime.now(timezone.utc) - timedelta(hours=24)
+        recent_activity = await db.user_activities.count_documents({
+            "timestamp": {"$gte": twenty_four_hours_ago.isoformat()}
+        })
+        
+        return {
+            "total_users": total_users,
+            "recent_users_7d": recent_users,
+            "total_logins": total_logins,
+            "total_registrations": total_registrations,
+            "recent_activity_24h": recent_activity
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching admin stats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch statistics"
+        )
 
 @api_router.get("/admin/charts/signups")
 async def get_signup_trend(
