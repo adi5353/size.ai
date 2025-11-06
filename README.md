@@ -77,10 +77,12 @@ A modern, professional web application for calculating Security Information and 
 - **Sonner** - Toast notifications
 
 ### Backend
-- **FastAPI** - Modern Python web framework
+- **FastAPI** - Modern Python web framework with OpenAPI/Swagger documentation
 - **Python 3.11+** - Programming language
-- **MongoDB** - NoSQL database
+- **MongoDB** - NoSQL database with optimized indexing
 - **Uvicorn** - ASGI server
+- **JWT Authentication** - Secure user sessions
+- **PyMongo** - MongoDB driver with connection pooling
 
 ### Development Tools
 - **Vite** - Fast build tool
