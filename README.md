@@ -87,7 +87,10 @@ A modern, professional web application for calculating Security Information and 
 ### Development Tools
 - **Vite** - Fast build tool
 - **ESLint** - Code linting
+- **Ruff** - Fast Python linter
 - **PostCSS** - CSS processing
+- **Docker & Docker Compose** - Containerization
+- **GitHub Actions** - CI/CD workflows (optional)
 
 ---
 
