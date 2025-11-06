@@ -79,7 +79,21 @@ export const Calculator = () => {
 
   // Memoize results to prevent recalculation on every render
   const results = useMemo(() => {
-    return calculateInfrastructure(devices, configuration);
+    const calculatedResults = calculateInfrastructure(devices, configuration);
+    
+    // Save to localStorage for Cost Comparison page
+    try {
+      localStorage.setItem('lastCalculatorConfig', JSON.stringify({
+        results: calculatedResults,
+        devices,
+        configuration,
+        timestamp: new Date().toISOString(),
+      }));
+    } catch (e) {
+      console.error('Error saving calculator config:', e);
+    }
+    
+    return calculatedResults;
   }, [devices, configuration]);
 
   // Load configuration from dashboard if passed via navigation state
