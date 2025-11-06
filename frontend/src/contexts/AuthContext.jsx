@@ -97,12 +97,11 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ name, email, password })
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Registration failed');
-      }
-
       const userData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(userData.detail || 'Registration failed');
+      }
       
       // Auto-login after registration
       const loginResult = await login(email, password);
