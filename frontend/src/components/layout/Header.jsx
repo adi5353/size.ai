@@ -58,6 +58,9 @@ export const Header = ({ onSaveConfig, onLoadConfigs }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
+              {/* Language Selector */}
+              <LanguageSelector />
+              
               {isAuthenticated ? (
                 <>
                   {/* Show navigation buttons based on current page */}
