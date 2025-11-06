@@ -339,12 +339,17 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Growth Projections Card (Card 6)"
-    - "Cost Estimation Card (Card 7)"
+    - "MongoDB Connection Pooling & Optimization"
+    - "Database Indexing Strategy"
+    - "TTL Indexes for Data Cleanup"
+    - "MongoDB Schema Validation"
+    - "Query Optimization with Aggregation Pipelines"
+    - "Comprehensive Error Handling"
+    - "Database Health Check Endpoint"
   stuck_tasks: []
-  test_all: false
+  test_all: true
   test_priority: "high_first"
-  backend_testing_complete: true
+  backend_testing_complete: false
 
 backend:
   - task: "User Authentication System"
