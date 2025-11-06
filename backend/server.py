@@ -858,12 +858,45 @@ async def delete_configuration(
 
 # ============= AI ASSISTANT ROUTES =============
 
-@api_router.post("/ai/chat", response_model=ChatResponse)
+@api_router.post(
+    "/ai/chat",
+    response_model=ChatResponse,
+    summary="AI Chat",
+    description="Get AI-powered insights and recommendations",
+    tags=["AI Assistant"],
+    responses={
+        200: {
+            "description": "AI response generated successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "message": "Based on your configuration, I recommend...",
+                        "session_id": "session-uuid"
+                    }
+                }
+            }
+        },
+        401: {"description": "Authentication required"},
+        500: {"description": "AI service error"}
+    }
+)
 async def chat_with_assistant(
     chat_data: ChatMessageCreate,
     current_user: TokenData = Depends(get_current_user)
 ):
-    """Chat with AI assistant."""
+    """
+    Chat with AI assistant for infrastructure sizing insights.
+    
+    - **message**: Your question or request
+    - **session_id**: Optional session ID for conversation continuity
+    
+    The AI assistant helps with:
+    - Infrastructure sizing recommendations
+    - EPS (Events Per Second) calculations
+    - Compliance requirements (PCI-DSS, HIPAA, GDPR, SOC 2)
+    - Cost optimization strategies
+    - High availability planning
+    """
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         
