@@ -338,7 +338,10 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Scenario Selector Modal - Display and Interaction"
+    - "Scenario Application - Device Mapping"
+    - "Scenario Application - Configuration Mapping"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
