@@ -239,9 +239,9 @@ const CostComparisonPage = () => {
           transition={{ delay: 0.4 }}
         >
           <CostComparisonMatrix
-            results={sampleData.results}
-            devices={sampleData.devices}
-            configuration={sampleData.configuration}
+            results={safeData.results}
+            devices={safeData.devices}
+            configuration={safeData.configuration}
           />
         </motion.div>
 
