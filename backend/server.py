@@ -1088,8 +1088,11 @@ async def root():
                 "application/json": {
                     "example": {
                         "status": "healthy",
+                        "timestamp": "2025-01-01T00:00:00Z",
+                        "uptime_seconds": 3600,
                         "database": "connected",
-                        "version": "1.0.0"
+                        "version": "1.0.0",
+                        "environment": "production"
                     }
                 }
             }
@@ -1102,12 +1105,23 @@ async def health_check():
     
     Returns the current status of the API and database connection.
     """
+    import time
+    
+    # Check database health
     db_healthy = await db_manager.health_check()
+    
+    # Calculate uptime
+    if not hasattr(app.state, 'start_time'):
+        app.state.start_time = time.time()
+    uptime_seconds = int(time.time() - app.state.start_time)
     
     return {
         "status": "healthy" if db_healthy else "unhealthy",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "uptime_seconds": uptime_seconds,
         "database": "connected" if db_healthy else "disconnected",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "environment": os.environ.get('ENV', 'development')
     }
 
 @api_router.post("/status", response_model=StatusCheck)
