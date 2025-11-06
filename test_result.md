@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implement Database Optimization & Backend Improvements (TIER 1 CRITICAL IMPROVEMENTS - Phase 1): MongoDB connection pooling, indexes, schema validation, query optimization, and error handling"
+user_problem_statement: "Fix Response body clone error + Implement TIER 2 IMPORTANT IMPROVEMENTS: API Documentation (OpenAPI/Swagger), Real-Time Validation, Advanced Visualizations, and Caching Strategy"
 
 frontend:
   - task: "Authentication Flow and Protected Routes"
