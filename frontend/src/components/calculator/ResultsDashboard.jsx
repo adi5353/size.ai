@@ -4,13 +4,14 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { 
   Activity, Database, HardDrive, Cpu, Download, Save, 
-  TrendingUp, AlertTriangle, CheckCircle, Info, Shield 
+  TrendingUp, AlertTriangle, CheckCircle, Info, Shield, DollarSign 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { generatePDFReport } from '@/utils/pdfGenerator';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { CostComparisonMatrix } from '@/components/calculator/CostComparisonMatrix';
 
 export const ResultsDashboard = ({ results, devices, configuration }) => {
   const [animateNumbers, setAnimateNumbers] = useState(false);
