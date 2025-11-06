@@ -65,13 +65,46 @@ const CostComparisonPage = () => {
   });
 
   const totalDevices = useMemo(() => {
-    return Object.values(sampleData.devices).reduce((sum, d) => sum + (d.quantity || 0), 0);
-  }, [sampleData.devices]);
+    if (!sampleData?.devices) return 0;
+    return Object.values(sampleData.devices).reduce((sum, d) => sum + (d?.quantity || 0), 0);
+  }, [sampleData]);
 
   const hasRealData = useMemo(() => {
     const savedConfig = localStorage.getItem('lastCalculatorConfig');
     return !!savedConfig;
   }, []);
+
+  // Safe data access with fallbacks
+  const safeData = useMemo(() => {
+    const defaultData = getDefaultSampleData();
+    return {
+      results: {
+        eventProcessing: {
+          averageEPS: sampleData?.results?.eventProcessing?.averageEPS || defaultData.results.eventProcessing.averageEPS,
+          peakEPS: sampleData?.results?.eventProcessing?.peakEPS || defaultData.results.eventProcessing.peakEPS,
+          dailyEvents: sampleData?.results?.eventProcessing?.dailyEvents || defaultData.results.eventProcessing.dailyEvents,
+        },
+        dataVolume: {
+          dailyGB: sampleData?.results?.dataVolume?.dailyGB || defaultData.results.dataVolume.dailyGB,
+          monthlyTB: sampleData?.results?.dataVolume?.monthlyTB || defaultData.results.dataVolume.monthlyTB,
+          annualTB: sampleData?.results?.dataVolume?.annualTB || defaultData.results.dataVolume.annualTB,
+        },
+        storage: {
+          hotStorageTB: sampleData?.results?.storage?.hotStorageTB || defaultData.results.storage.hotStorageTB,
+          coldStorageTB: sampleData?.results?.storage?.coldStorageTB || defaultData.results.storage.coldStorageTB,
+          totalStorageTB: sampleData?.results?.storage?.totalStorageTB || defaultData.results.storage.totalStorageTB,
+          withReplicationTB: sampleData?.results?.storage?.withReplicationTB || defaultData.results.storage.withReplicationTB,
+        },
+      },
+      devices: sampleData?.devices || defaultData.devices,
+      configuration: {
+        retentionPeriod: sampleData?.configuration?.retentionPeriod || defaultData.configuration.retentionPeriod,
+        complianceTemplate: sampleData?.configuration?.complianceTemplate || defaultData.configuration.complianceTemplate,
+        includeGrowth: sampleData?.configuration?.includeGrowth ?? defaultData.configuration.includeGrowth,
+        annualGrowth: sampleData?.configuration?.annualGrowth || defaultData.configuration.annualGrowth,
+      },
+    };
+  }, [sampleData]);
 
   return (
     <div className="min-h-screen bg-background grid-bg">
