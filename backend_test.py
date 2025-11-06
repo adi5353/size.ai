@@ -547,47 +547,30 @@ class BackendTester:
             self.log(f"❌ User activity test error: {str(e)}", "ERROR")
             return False
     
-    def create_admin_user(self):
-        """Create an admin user for testing admin endpoints"""
-        self.log("Creating Admin User for Testing")
+    def get_admin_token(self):
+        """Login with existing admin user for testing"""
+        self.log("Logging in with existing admin user")
         
-        # Generate unique admin email
-        unique_id = str(uuid.uuid4())[:8]
-        admin_user = {
-            "name": "Admin User",
-            "email": f"admin{unique_id}@example.com",
-            "password": "adminpass123"
+        # Use existing admin credentials
+        admin_login = {
+            "email": "admin@sizeai.com",
+            "password": "admin123"  # Default admin password
         }
         
         try:
-            # Register admin user
-            response = self.session.post(f"{API_BASE}/auth/register", json=admin_user)
+            response = self.session.post(f"{API_BASE}/auth/login", json=admin_login)
             
-            if response.status_code == 201:
-                self.log("✅ Admin user registered successfully")
-                
-                # Login as admin
-                login_data = {
-                    "email": admin_user["email"],
-                    "password": admin_user["password"]
-                }
-                
-                response = self.session.post(f"{API_BASE}/auth/login", json=login_data)
-                
-                if response.status_code == 200:
-                    token_data = response.json()
-                    admin_token = token_data["access_token"]
-                    self.log("✅ Admin user logged in successfully")
-                    return admin_token
-                else:
-                    self.log(f"❌ Admin login failed: {response.status_code}", "ERROR")
-                    return None
+            if response.status_code == 200:
+                token_data = response.json()
+                admin_token = token_data["access_token"]
+                self.log("✅ Admin user logged in successfully")
+                return admin_token
             else:
-                self.log(f"❌ Admin registration failed: {response.status_code}", "ERROR")
+                self.log(f"❌ Admin login failed: {response.status_code} - {response.text}", "ERROR")
                 return None
                 
         except Exception as e:
-            self.log(f"❌ Admin user creation error: {str(e)}", "ERROR")
+            self.log(f"❌ Admin login error: {str(e)}", "ERROR")
             return None
     
     def test_admin_stats_endpoint(self):
