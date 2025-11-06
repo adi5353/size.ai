@@ -245,6 +245,35 @@ export const Calculator = () => {
     }
   };
 
+  // Handle configuration import
+  const handleImportConfig = (importedConfig) => {
+    if (importedConfig.devices) {
+      setDevices(importedConfig.devices);
+    }
+    if (importedConfig.configuration) {
+      setConfiguration(importedConfig.configuration);
+    }
+    
+    // Save to history
+    saveToHistory({
+      name: importedConfig.name || 'Imported Configuration',
+      description: importedConfig.description || '',
+      devices: importedConfig.devices,
+      configuration: importedConfig.configuration,
+    });
+    
+    toast.success('Configuration loaded successfully!');
+  };
+
+  // Get current configuration for export
+  const getCurrentConfig = () => ({
+    name: 'Current Configuration',
+    description: 'Exported from size.ai calculator',
+    devices,
+    configuration,
+    results,
+  });
+
   return (
     <div className="min-h-screen bg-background grid-bg">
       <Header onSaveConfig={handleSaveConfig} onLoadConfigs={handleLoadConfigs} />
