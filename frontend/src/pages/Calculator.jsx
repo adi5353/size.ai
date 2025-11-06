@@ -464,6 +464,14 @@ export const Calculator = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Import/Export Modal */}
+      <ImportExportModal
+        isOpen={importExportModalOpen}
+        onClose={() => setImportExportModalOpen(false)}
+        currentConfig={getCurrentConfig()}
+        onImport={handleImportConfig}
+      />
     </div>
   );
 };
